@@ -1,13 +1,14 @@
 import { CourseItem } from "./attendance";
-import { Student } from "./students";
+import { Student } from "../../components/students";
 
 export interface AttendanceButtonProps {
     onSubmitAttendance?: () => void;
     isSubmitting?: boolean;
     onEditAttendance?: () => void;
     isEdit?: boolean;
-    onAddStudent?: (student: Student) => void;
-    onCreateStudent?: (primer_nombre: string, numero_identificacion: string, celular: string, tipo_identificacion?: string) => void;
+    onAddStudent: (student: Student) => void;
+    onCreateStudent: (primer_nombre: string, numero_identificacion: string, celular: string, tipo_identificacion?: string) => void;
+    onDeactivateCourse: () => void;
     course: CourseItem;
     canSubmit?: boolean;
 }

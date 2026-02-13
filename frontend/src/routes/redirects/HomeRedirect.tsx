@@ -1,10 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import ViewAttendance from "@/pages/admin/ViewAttendance";
+import ViewAttendance from "@/pages/admin/attendance/ViewAttendance";
 import Attendance from "@/pages/monitor/Attendance";
 
 const HomeRedirect = () => {
-    const { user } = useAuth();
+    const { user, handleUnauthorized } = useAuth();
 
     if (!user) {
         return <Navigate to="/ingresar" replace />;
@@ -16,7 +16,9 @@ const HomeRedirect = () => {
         case "monitor":
             return <Attendance />;
         default:
-            return <Navigate to="/no-autorizado" replace />;
+            handleUnauthorized();
+            return;
+            // return <Navigate to="/no-autorizado" replace />;
     }
 };
 

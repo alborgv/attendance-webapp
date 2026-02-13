@@ -1,4 +1,5 @@
 import { ConfirmModalProps } from "@/types/ui/modals";
+import { useState } from "react";
 
 const ConfirmModal = ({
     open,
@@ -10,6 +11,17 @@ const ConfirmModal = ({
     onCancel,
 }: ConfirmModalProps) => {
     if (!open) return null;
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const handleConfirm = async () => {
+        try {
+            setLoading(true);
+            await onConfirm();
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -25,10 +37,12 @@ const ConfirmModal = ({
                         {cancelText}
                     </button>
                     <button
-                        onClick={onConfirm}
-                        className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                        onClick={handleConfirm}
+                        disabled={loading}
+                        className={`px-4 py-2 rounded-lg 
+                            ${loading ? "bg-gray-300 text-gray-500" : "bg-red-600 text-white hover:bg-red-700"}`}
                     >
-                        {confirmText}
+                        {loading ? "Cargando..." : confirmText}
                     </button>
                 </div>
             </div>

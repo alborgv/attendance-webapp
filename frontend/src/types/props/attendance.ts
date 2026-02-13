@@ -1,5 +1,5 @@
 import { Students } from "../models/user";
-import { Student } from "./students";
+import { Student } from "../../components/students";
 
 export type AttendanceState = "P" | "A" | "J" | "none";
 
@@ -25,9 +25,10 @@ export interface CourseItem {
     id: string;
     modulo: string;
     estado: string;
-    estudiantes: Students[];
     fecha: string;
-    monitor: UserProfileProps;
+    monitor: UserProfileProps | string;
+    estudiantes?: Students[];
+    total_estudiantes?: number;
 }
 
 export interface AttendanceFilters {

@@ -4,4 +4,5 @@ export interface Students {
     tipo_identificacion: string;
     numero_identificacion: string;
     celular: string;
+    jornada: string;
 }

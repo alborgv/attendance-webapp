@@ -1,284 +1,188 @@
 import { AttendanceData, AttendanceFilters, CourseItem } from '@/types/props/attendance';
-import { Student } from '@/types/props/students';
 import { useAuth } from "@/context/AuthContext";
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
+import { ExcelColumn } from '.';
+import { createStudentsService } from '@/services/students.service';
+import { createHttpClient } from '@/services/http';
+import { createCourseService } from '@/services/course.service';
+import { CourseFiltersBD } from '@/services';
+import { createMonitorService } from '@/services/monitor.service';
+import { createAttendanceService } from '@/services/attendance.service';
+import { createExcelService } from '@/services/excel.service';
 
 const QueryContext = createContext<QueryContextType | undefined>(undefined);
 
 export const QueryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [selectedCourse, setSelectedCourse] = useState<CourseItem>();
+    const [selectedCourse, setSelectedCourse] = useState<CourseItem | null>(null);
 
-    const { authTokens } = useAuth();
+    const { authTokens, handleUnauthorized } = useAuth();
     // const [loading, setLoading] = useState<boolean>(false);
     // const navigate = useNavigate();
 
     const urlBackend = import.meta.env.VITE_API_URL;
 
-    const getAllStudentsBasic = async (search?: String) => {
-
-        const queryString = search ? `?search=${search}` : "";
-
-        const response = await fetch(`${urlBackend}/api/users_basic/${queryString}`);
-        const data = await response.json();
-        const mapped: Student[] = data.map((item: any) => ({
-            id: item.id,
-            nombre_completo: item.nombre_completo,
-            tipo_identificacion: item.tipo_identificacion,
-            numero_identificacion: item.numero_identificacion,
-            numero: item.celular ?? "",
-            avatar: undefined,
-        }));
-        return mapped;
-    };
-    const createStudentBasic = async (primer_nombre: string, numero_identificacion: string, celular: string, tipo_identificacion?: string) => {
-
-        if (!authTokens) return;
-
-        const accessToken = authTokens.access;
-
-        const response = await fetch(`${urlBackend}/api/users_basic/crear/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({
-                primer_nombre: primer_nombre,
-                numero_identificacion: numero_identificacion,
-                celular: celular,
-                tipo_identificacion: tipo_identificacion || "EX",
-            }),
+    const services = useMemo(() => {
+        if (!authTokens) return null;
+        const http = createHttpClient({
+            apiUrl: urlBackend,
+            tokens: authTokens,
+            onUnauthorized: handleUnauthorized
         });
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || "Error al crear estudiante");
-        }
-
-        return await response.json();
-    }
-
-    const createCourse = async (courseData: { modulo: string; fecha: string; estudiantes: number[]; }) => {
-        if (!authTokens) return;
-
-        const accessToken = authTokens.access;
-
-        const response = await fetch(`${urlBackend}/api/curso/crear/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({
-                modulo: courseData.modulo,
-                fecha: courseData.fecha,
-                agregar_estudiantes: courseData.estudiantes,
-                estado: "A"
-            }),
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || error.message || "Error al crear el curso");
-        }
-
-        return await response.json();
-    };
-
-    const addStudentCourse = async (courseId: string, studentsId: number[]) => {
-
-        if (!authTokens) return;
-
-        const accessToken = authTokens.access;
-
-        const response = await fetch(`${urlBackend}/api/curso/${courseId}/agregar_estudiante/`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify({
-                agregar_estudiantes: studentsId,
-            }),
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || "Error al actualizar el curso");
-        }
-
-        return await response.json();
-    };
-
-
-    const createAttendance = async (cursoId: string, asistenciasData: AttendanceData, fecha?: string, observaciones?: string) => {
-        if (!authTokens) return;
-
-        const payload = {
-            curso: cursoId,
-            fecha: fecha || new Date().toISOString().split('T')[0],
-            asistencias: asistenciasData,
-            observaciones: observaciones || ''
+        return {
+            students: createStudentsService(http),
+            course: createCourseService(http),
+            monitor: createMonitorService(http),
+            attendance: createAttendanceService(http),
+            excel: createExcelService(http),
         };
+    }, [authTokens, urlBackend]);
 
-        if (!authTokens) return;
+    const getAllStudentsBasic = (params?: {
+            username?: string;
+            page?: number;
+            pageSize?: number;
+        }) => {
+        if (!services) return Promise.resolve([]);
+        return services.students.getAllStudentsBasic(params);
+    };
 
-        const accessToken = authTokens.access;
+    const createStudentBasic = (
+        primer_nombre: string,
+        numero_identificacion: string,
+        celular: string,
+        tipo_identificacion?: string
+    ) => {
+        if (!services) return Promise.reject("Service not ready");
 
-        const response = await fetch(`${urlBackend}/api/asistencia/crear/`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
-            },
-            body: JSON.stringify(payload),
+        return services.students.createStudentBasic({
+            primer_nombre,
+            numero_identificacion,
+            celular,
+            tipo_identificacion,
         });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || error.detail || "Error al crear las asistencias");
-        }
-
-        return await response.json();
     };
 
-    const getCourseById = async (curso_id: String) => {
-        const response = await fetch(`${urlBackend}/api/curso/?curso_id=${curso_id}`);
-        const data = await response.json();
-
-        if (data && data.length > 0) {
-            return data[0];
-        }
-
-        return null;
-    };
-
-    const getCourseByMonitor = async (username: String) => {
-        const response = await fetch(`${urlBackend}/api/curso/?monitor_username=${username}`);
-        const data = await response.json();
-        return data;
+    const StudentAlert = (params?: {
+        jornada?: string;
+        username?: string;
+        page?: number;
+        pageSize?: number;
+    }) => {
+        if (!services) return Promise.resolve([]);
+        return services.students.StudentAlert(params);
     };
     
-    const getCourseByStatus = async (status: String) => {
-        const response = await fetch(`${urlBackend}/api/curso/?estado=${status}`);
-        const data = await response.json();
-        return data;
-    };
-    
-    const getAttendance = async (filters: AttendanceFilters = {}) => {
-        const queryParams = new URLSearchParams();
-        if (filters.fecha) queryParams.append('fecha', filters.fecha);
-        if (filters.estado) queryParams.append('estado', filters.estado);
-        if (filters.curso) queryParams.append('curso', filters.curso);
-
-        const queryString = queryParams.toString();
-        const url = queryString
-            ? `${urlBackend}/api/asistencia/?${queryString}`
-            : `${urlBackend}/api/asistencia/`;
-
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        return data;
+    const StudentAbsent = (params?: {
+        startDate?: string;
+        endDate?: string;
+        jornada?: string;
+        username?: string;
+        page?: number;
+        pageSize?: number;
+    }) => {
+        if (!services) return Promise.resolve([]);
+        return services.students.StudentAbsent(params);
     };
 
-    const getAttendanceMetrics = async () => {
-        const response = await fetch(`${urlBackend}/api/asistencia/metricas`);
-        const data = await response.json();
-        return data;
-    };
 
-    const deactivateCourse = async (courseId: string, estado: boolean) => {
-        try {
-            const response = await fetch(`/api/curso/${courseId}/desactivar`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ estado }),
-            });
-
-            if (!response.ok) throw new Error('Error al desactivar el curso');
-
-            return await response.json();
-        } catch (error) {
-            console.error('Error desactivando curso:', error);
-            throw error;
-        }
-    };
-
-    const getAllMonitor = async () => {
-        try {
-            const response =  await fetch(`${urlBackend}/api/monitores/`);
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error consiguiente monitores:', error);
-            throw error;
-        }
+    const createCourse = (courseData: { modulo: string; fecha: string; estudiantes: number[]; }) => {
+        if (!services) return Promise.resolve([]);
+        return services.course.createCourse(courseData);
     }
-    const addMonitor = async (userId: number) => {
-        if (!authTokens) return;
 
-        const accessToken = authTokens.access;
+    const addStudentCourse = (courseId: string, studentsId: number[]) => {
+        if (!services) return Promise.resolve([]);
+        return services.course.addStudentCourse(courseId, studentsId);
+    };
 
-        try {
-            const response =  await fetch(`${urlBackend}/api/users/${userId}/agregar_monitor/`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error al agregar monitor:', error);
-            throw error;
-        }
+    const getCourses = (filters: CourseFiltersBD = {}) => {
+        if (!services) return Promise.resolve([]);
+        return services.course.getCourses(filters);
+    };
+
+    const getAllCourse = async (params?: {
+        status?: string;
+        course?: string;
+        page?: number;
+        pageSize?: number;
+    }) => {
+        if (!services) return Promise.resolve(null);
+        return services.course.getAllCourse(params);
+    };
+
+
+    const deactivateCourse = (courseId: string) => {
+        if (!services) return Promise.resolve([]);
+        return services.course.deactivateCourse(courseId);
+    };
+
+    const getAllMonitor = () => {
+        if (!services) return Promise.resolve([]);
+        return services.monitor.getAllMonitor();
     }
-    
-    const deleteMonitor = async (userId: number) => {
-        if (!authTokens) return;
-
-        const accessToken = authTokens.access;
-
-        try {
-            const response =  await fetch(`${urlBackend}/api/users/${userId}/eliminar_monitor/`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error al eliminar monitor:', error);
-            throw error;
-        }
+    const createMonitor = (monitor: MonitorProps) => {
+        if (!services) return Promise.resolve([]);
+        return services.monitor.createMonitor(monitor);
     }
+    const addMonitor = (userId: number) => {
+        if (!services) return Promise.resolve([]);
+        return services.monitor.addMonitor(userId);
+    }
+    const deleteMonitor = (userId: number) => {
+        if (!services) return Promise.resolve([]);
+        return services.monitor.deleteMonitor(userId);
+    }
+    const getAttendance = (filters: AttendanceFilters) => {
+        if (!services) return Promise.resolve([]);
+        return services.attendance.getAttendance(filters);
+    }
+    const getAttendanceMetrics = () => {
+        if (!services) return Promise.resolve([]);
+        return services.attendance.getAttendanceMetrics();
+    }
+    const createAttendance = (cursoId: string, asistenciasData: AttendanceData, fecha?: string, observaciones?: string) => {
+        if (!services) return Promise.resolve([]);
+        return services.attendance.createAttendance(cursoId, asistenciasData, fecha, observaciones);
+    }
+
+    const exportExcel = <T,>(
+        filename: string,
+        columns: ExcelColumn<T>[],
+        title: string,
+        data: T[]
+    ) => {
+        if (!services) return Promise.resolve([]);
+        return services.excel.exportExcel(filename, columns, title, data);
+    };
+
+    const uploadExcel = (file: File) => {
+        if (!services) return Promise.resolve([]);
+        return services.excel.uploadExcel(file);
+    };
 
     return (
         <QueryContext.Provider value={{
             selectedCourse,
             setSelectedCourse,
+
             getAllStudentsBasic,
-            getCourseById,
-            getCourseByStatus,
-            getCourseByMonitor,
+            createStudentBasic,
+            StudentAlert,
+            StudentAbsent,
+            getCourses,
             getAttendance,
             getAttendanceMetrics,
             createCourse,
             addStudentCourse,
             createAttendance,
-            createStudentBasic,
             deactivateCourse,
             getAllMonitor,
+            createMonitor,
             addMonitor,
             deleteMonitor,
+            getAllCourse,
+            exportExcel,
+            uploadExcel
         }}>
             {children}
         </QueryContext.Provider>

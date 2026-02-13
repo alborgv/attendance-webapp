@@ -1,4 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 interface RoleGuardProps {
@@ -6,14 +7,20 @@ interface RoleGuardProps {
 }
 
 const RoleGuard: React.FC<RoleGuardProps> = ({ allowedRoles }) => {
-    const { user } = useAuth();
+    const { user, handleUnauthorized } = useAuth();
+
+    useEffect(() => {
+        if (user && !allowedRoles.includes(user.role)) {
+            handleUnauthorized();
+        }
+    }, [user, allowedRoles, handleUnauthorized]);
 
     if (!user) {
         return <Navigate to="/ingresar" replace />;
     }
 
     if (!allowedRoles.includes(user.role)) {
-        return <Navigate to="/no-autorizado" replace />;
+        return null; // o un loader
     }
 
     return <Outlet />;

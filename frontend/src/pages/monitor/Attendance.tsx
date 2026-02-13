@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
-import AttendanceLists from "@/components/Attendance/AttendanceLists";
-import CreateCourseModal from '@/components/ui/Modal/CreateCourseModal';
+import AttendanceLists from "@/components/attendance/AttendanceLists";
+import CreateCourseModal from '@/components/courses/modals/CreateCourseModal';
 import { useAuth } from '@/context/AuthContext';
 import { useQuery } from '@/context/QueryContext';
 import { CourseItem } from '@/types/props/attendance';
@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/useToast';
 
 export default function Attendance() {
     const { user } = useAuth();
-    const { getCourseByMonitor } = useQuery();
+    const { getCourses } = useQuery();
     const toast = useToast();
 
     const [courses, setCourses] = useState<CourseItem[]>([]);
@@ -21,7 +21,8 @@ export default function Attendance() {
         try {
             setLoading(true);
             setError(null);
-            const data = await getCourseByMonitor(user?.username || "");
+            const data = await getCourses({ monitor_username: user?.username || "" });
+            console.log("DATA:", data)
             setCourses(data ?? []);
         } catch (err) {
             console.error(err);

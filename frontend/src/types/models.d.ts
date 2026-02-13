@@ -13,12 +13,11 @@ declare interface EstudianteExtraProps {
     nombre_completo: string;
     celular: string;
 }
-
 declare interface UserProfileProps {
   user: number;
   role: Role;
 
-  // jwt
+  // JWT
   email: string;
   first_name: string;
   last_name: string;
@@ -26,7 +25,12 @@ declare interface UserProfileProps {
   iat: number;
   jti: string;
 
-  // Info básica
+  // Identificación
+  tipo_identificacion: TipoIdentificacion;
+  numero_identificacion?: string | null;
+  lugar_expedicion_documento?: string | null;
+
+  // Información personal
   nombre_completo?: string | null;
   primer_nombre?: string | null;
   segundo_nombre?: string | null;
@@ -38,76 +42,58 @@ declare interface UserProfileProps {
   estrato?: Estrato | null;
   estado_civil?: EstadoCivil | '' | null;
   tipo_sangre?: TipoSangre | '' | null;
-
-  // Identificación
-  tipo_identificacion: TipoIdentificacion;
-  numero_identificacion?: string | null;
-  lugar_expedicion_documento?: string | null;
+  edad?: number | null;
 
   // Contacto
   telefono?: string | null;
   celular?: string | null;
+  correo_electronico?: string | null;
   direccion?: string | null;
   pais?: string | null;
   lugar_residencia?: string | null;
   barrio?: string | null;
 
-  // Académica
+  // Académico
   sede?: string | null;
   jornada?: string | null;
   programa?: string | null;
   grupo?: string | null;
   periodo?: string | null;
   nivel?: string | null;
-  codigo_matricula?: string | null;
   nivel_formacion?: string | null;
+  codigo_matricula?: string | null;
 
-  // Salud / aseguradoras
+  // Salud
   eps?: string | null;
   ars?: string | null;
   aseguradora?: string | null;
   grupo_sisben?: string | null;
+  pertenece_regimen_contributivo?: string | null;
 
-  // Adicional
-  discapacidad?: boolean;
-  medio_transporte?: string | null;
-  multiculturalidad?: boolean;
-  zona?: ZoneOrEmpty;
+  // Información adicional
   ocupacion?: string | null;
+  discapacidad?: string | null;
+  medio_transporte?: string | null;
+  multiculturalidad?: string | null;
+  zona?: ZoneOrEmpty;
 
   // Matrícula
   estado?: EstadoMatricula;
   tipo_cancelacion?: string | null;
   fecha_matricula?: string | null;
-  formalizada?: boolean;
+  formalizada?: string | null;
   condicion_matricula?: string | null;
-
-  // Historial académico
-  nivel_academico?: string | null;
-  ultimo_ano?: number | null;
-  ultimo_nivel_aprobado?: string | null;
-  titulo_alcanzado?: string | null;
-  graduado?: boolean;
-  fecha_graduacion?: string | null;
-
-  // Institución anterior
-  institucion?: string | null;
-  municipio_institucion?: string | null;
-  nit_institucion?: string | null;
-  telefono_institucion?: string | null;
-  direccion_institucion?: string | null;
-  email_institucion?: string | null;
 
   // Sistema
   ultima_actualizacion?: string | null;
-  edad?: number | null;
-  pertenece_regimen_contributivo?: boolean;
 }
 
+
 interface MonitorProps {
-  id: number;
+  id?: number;
   nombre_completo: string;
   tipo_documento: string;
   numero_documento: string;
-  estado: 'ACT' | 'INA';
+  celular: string;
+  estado: 'A' | 'I';
 }

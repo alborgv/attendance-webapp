@@ -1,6 +1,6 @@
 import React from "react";
 import AttendanceButton from "@/components/ui/Button/OptionAttendanceButton";
-import { StudentRowProps } from "@/types/props/students";
+import { StudentRowProps } from "@/components/students";
 
 const defaultAvatar =
 "data:image/svg+xml;utf8,\
@@ -19,7 +19,7 @@ const StudentRow: React.FC<StudentRowProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center mb-3 sm:mb-0">
                 <img
-                    src={student.avatar || defaultAvatar}
+                    src={defaultAvatar}
                     alt={student.nombre_completo}
                     className="w-12 h-12 rounded-full mr-4 object-cover border-2 border-gray-200"
                 />

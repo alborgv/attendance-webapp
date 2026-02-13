@@ -1,10 +1,17 @@
 import { CourseCardProps } from '@/types/ui/cards';
 import React from 'react';
 import { FaUsers, FaCalendarAlt, FaUserTie, FaArrowRight, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+import "dayjs/locale/es"
+
+
+dayjs.extend(utc)
+dayjs.locale("es")
 
 const CourseCard: React.FC<CourseCardProps> = ({ course, onContinue, index }) => {
     const isActive = course.estado === "A";
-
+    console.log("COUR:", course)
     return (
         <div
             key={index}
@@ -35,11 +42,12 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onContinue, index }) =>
                         <div className="flex-1 min-w-0">
                             <p className="text-xs text-gray-500 font-medium">Fecha de creación</p>
                             <p className="text-sm font-semibold text-gray-900 truncate">
-                                {new Date(course.fecha).toLocaleDateString("es-CO", {
+                                {/* {new Date(course.fecha).toLocaleDateString("es-CO", {
                                     year: 'numeric',
                                     month: 'long',
                                     day: 'numeric'
-                                })}
+                                })} */}
+                                {dayjs.utc(course.fecha).format("DD [de] MMMM [de] YYYY")}
                             </p>
                         </div>
                     </div>
@@ -51,7 +59,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onContinue, index }) =>
                         <div className="flex-1 min-w-0">
                             <p className="text-xs text-gray-500 font-medium">Monitor asignado</p>
                             <p className="text-sm font-semibold text-gray-900 truncate">
-                                {course.monitor.primer_nombre} {course.monitor.primer_apellido}
+                                {typeof course.monitor !== "string" ? course.monitor.nombre_completo : null}
+
                             </p>
                         </div>
                     </div>
@@ -63,7 +72,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, onContinue, index }) =>
                         <div className="flex-1 min-w-0">
                             <p className="text-xs text-gray-500 font-medium">Estudiantes inscritos</p>
                             <p className="text-sm font-semibold text-gray-900">
-                                {course.estudiantes.length} {course.estudiantes.length === 1 ? 'estudiante' : 'estudiantes'}
+                                {course.estudiantes?.length} {course.estudiantes?.length === 1 ? 'estudiante' : 'estudiantes'}
                             </p>
                         </div>
                     </div>

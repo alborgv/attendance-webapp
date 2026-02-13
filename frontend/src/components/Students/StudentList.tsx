@@ -1,6 +1,6 @@
 import React from "react";
-import StudentRow from "@/components/Students/StudentRow";
-import { StudentListProps } from "@/types/props/students";
+import StudentRow from "@/components/students/StudentRow";
+import { StudentListProps } from "@/components/students";
 
 const StudentList: React.FC<StudentListProps> = ({
     course,
@@ -14,7 +14,8 @@ const StudentList: React.FC<StudentListProps> = ({
         nombre_completo: e.nombre_completo,
         numero_identificacion: e.numero_identificacion,
         tipo_identificacion: e.tipo_identificacion,
-        numero: e.celular || "",
+        celular: e.celular || "",
+        jornada: e.jornada
     }));
 
     return (

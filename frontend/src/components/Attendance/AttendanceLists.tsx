@@ -3,9 +3,9 @@ import { IoAddCircle } from "react-icons/io5";
 import { useState } from 'react';
 import AttendanceListSkeleton from '../ui/Skeleton/AttendanceListSkeleton';
 import CourseCard from '../ui/Card/CourseCard';
-import EmptyAttendanceState from './EmptyAttendanceState';
-import AttendanceErrorState from './AttendanceErrorState';
 import { CourseItem } from '@/types/props/attendance';
+import AttendanceErrorState from './AttendanceErrorState';
+import EmptyAttendanceState from './EmptyAttendanceState';
 
 interface Props {
     courses: CourseItem[];

@@ -14,6 +14,7 @@ from pathlib import Path
 
 import os
 import dj_database_url
+from datetime import timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -25,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-46-($v_tqx+m$u^4gc*pbmu6!b)k72q2vs+gl#i)-qwz_=-7a_'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'api',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -152,6 +154,20 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://192.168.1.81:5173",
+    "http://172.20.10.2:5173",
+    "http://169.254.10.199:5173",
+    "http://192.168.1.188:5173"
 ]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    'UPDATE_LAST_LOGIN': True,
+}

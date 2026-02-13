@@ -32,13 +32,21 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
 
             <div className="fixed inset-0 pointer-events-none z-50">
                 <div className="relative w-full h-full">
-                    {toasts.map((toast) => (
+                    <div className="
+                            fixed z-50
+                            bottom-4 right-4
+                            sm:bottom-4 sm:right-4
+                            max-sm:left-1/2 max-sm:-translate-x-1/2
+                        ">
+                        {toasts.map((toast) => (
                         <Toast
                             key={toast.id}
                             {...toast}
                             onClose={removeToast}
                         />
                     ))}
+                    </div>
+ 
                 </div>
             </div>
         </ToastContext.Provider>

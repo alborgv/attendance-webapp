@@ -1,5 +1,5 @@
 import { CourseItem } from "../props/attendance";
-import { Student } from "../props/students";
+import { Student } from "../../components/students";
 
 export interface CreateStudentModalProps {
     isOpen: boolean;

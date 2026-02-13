@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import StudentList from "@/components/Students/StudentList";
+import StudentList from "@/components/students/StudentList";
 import Calendar from "@/components/ui/Calendar";
-import AttendanceStats from "@/components/Attendance/AttendanceStats";
-import Header from "@/components/Attendance/AttendanceHeader";
+import AttendanceStats from "@/components/attendance/AttendanceStats";
+import Header from "@/components/attendance/AttendanceHeader";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/context/AuthContext";
 import { useQuery } from "@/context/QueryContext";
@@ -12,7 +12,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import AttendanceButton from "@/components/ui/Button/AttendanceButton";
 import { IoArrowBack } from "react-icons/io5";
 import TakeAttendanceSkeleton from "@/components/ui/Skeleton/TakeAttendanceSkeleton";
-import { Student } from "@/types/props/students";
+import { Student } from "@/components/students";
 import ConfirmModal from "@/components/ui/Modal/ConfirmModal";
 
 export default function TakeAttendance() {
@@ -20,7 +20,9 @@ export default function TakeAttendance() {
     const navigate = useNavigate();
 
     const { user } = useAuth();
-    const { selectedCourse, setSelectedCourse, getAttendance, getCourseById, addStudentCourse, createAttendance, createStudentBasic } = useQuery();
+    const { selectedCourse, setSelectedCourse, getAttendance,
+        getCourses, addStudentCourse, createAttendance,
+        createStudentBasic, deactivateCourse} = useQuery();
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -88,7 +90,7 @@ export default function TakeAttendance() {
         }
 
         const loadCourse = async () => {
-            const course = await getCourseById(curso);
+            const course = await getCourses({ curso_id: curso }).then(courses => courses[0]);
             setSelectedCourse(course);
         };
 
@@ -148,6 +150,11 @@ export default function TakeAttendance() {
         if (values.every(v => v === "none")) return "none";
         if (values.some(v => v === "A")) return "has-absent";
         return "all-present";
+    };
+
+    const handleDeactivateCourse = async () => {
+        await deactivateCourse(selectedCourse?.id || "");
+        console.log("ETETESTSET", selectedCourse)
     };
 
     const presentCount = Object.values(currentAttendance).filter(v => v === "P").length;
@@ -210,6 +217,7 @@ export default function TakeAttendance() {
                                 course={selectedCourse}
                                 onAddStudent={handleAddStudent}
                                 onCreateStudent={handleCreateStudent}
+                                onDeactivateCourse={handleDeactivateCourse}
                                 canSubmit={isAttendanceComplete}
                             />
                         ) : null}
@@ -272,7 +280,6 @@ export default function TakeAttendance() {
                     setConfirmType(null);
                 }}
             />
-
         </Layout>
     );
 }

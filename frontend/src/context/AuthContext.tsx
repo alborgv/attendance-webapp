@@ -65,6 +65,41 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
 
+  const changeMonitorPassword = async (userId: number, password: string): Promise<boolean> => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`${urlBackend}/api/users/${userId}/change_password/`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: password
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError({
+          notAuth: data.detail || "Las credenciales son inválidas.",
+        });
+        return false;
+      }
+
+      setAuthTokens(data);
+      setUser(jwtDecode(data.access));
+      localStorage.setItem('authTokens', JSON.stringify(data));
+
+      return true;
+    } catch (error) {
+      setError({ notAuth: 'Ocurrió un error inesperado.' });
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logoutUser = () => {
     setAuthTokens(null);
     setUser(null);
@@ -75,6 +110,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const handleUnauthorized = () => {
+    logoutUser();
+    navigate("/ingresar", { replace: true });
+  };
+  
   // Verificar token
   useEffect(() => {
     if (authTokens) {
@@ -91,11 +131,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [authTokens]);
 
+  
   return (
     <AuthContext.Provider value={{
       user,
       authTokens,
       loginUser,
+      handleUnauthorized,
+      changeMonitorPassword,
       logoutUser,
       error,
       loading

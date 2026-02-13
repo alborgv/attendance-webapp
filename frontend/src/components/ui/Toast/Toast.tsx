@@ -23,10 +23,10 @@ const Toast = ({ id, message, type, onClose }: ToastPropsExtends) => {
     }, []);
 
     const config = {
-        success: { bg: 'bg-green-50 border-green-200', icon: <LuCircleCheck /> },
-        error: { bg: 'bg-red-50 border-red-200', icon: <LuCircleX /> },
-        warning: { bg: 'bg-yellow-50 border-yellow-200', icon: <LuCircleAlert /> },
-        info: { bg: 'bg-blue-50 border-blue-200', icon: <LuInfo /> },
+        success: { bg: 'bg-green-100 border-green-300', icon: <LuCircleCheck className="text-green-500" size={20}/> },
+        error: { bg: 'bg-red-100 border-red-300', icon: <LuCircleX className="text-red-500" size={20}/> },
+        warning: { bg: 'bg-yellow-100 border-yellow-300', icon: <LuCircleAlert className="text-yellow-500" size={20}/> },
+        info: { bg: 'bg-blue-100 border-blue-300', icon: <LuInfo className="text-blue-500" size={20}/> },
     }[type];
 
     return (
