@@ -1,4 +1,4 @@
-import { Student, StudentFilters } from "@/components/students";
+import { Student, StudentFilters } from "@/components/Students";
 
 export function applyStudentFilters(data: Student[], filters: StudentFilters) {
     

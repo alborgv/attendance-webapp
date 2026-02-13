@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaSync, FaUserGraduate } from 'react-icons/fa';
 import DataTable from '../../ui/Table/variants/DataTable';
-import { Student, StudentFilters } from '@/components/students';
+import { Student, StudentFilters } from '@/components/Students';
 import { Column } from '@/components/ui/Table/variants';
 import StatusFilterSelect from '@/components/filters/StatusFilterSelect';
 import { ScheduleFilter, StatusFilter } from '@/components/filters';

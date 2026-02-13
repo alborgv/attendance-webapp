@@ -1,4 +1,4 @@
-import { Student } from "@/components/students";
+import { Student } from "@/components/Students";
 import { PaginatedResponse } from ".";
 
 export const createStudentsService = (http: {

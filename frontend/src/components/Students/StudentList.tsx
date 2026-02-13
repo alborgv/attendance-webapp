@@ -1,6 +1,6 @@
 import React from "react";
-import StudentRow from "@/components/students/StudentRow";
-import { StudentListProps } from "@/components/students";
+import StudentRow from "@/components/Students/StudentRow";
+import { StudentListProps } from "@/components/Students";
 
 const StudentList: React.FC<StudentListProps> = ({
     course,

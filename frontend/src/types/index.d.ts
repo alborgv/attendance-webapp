@@ -1,6 +1,6 @@
 import { ExcelColumn } from "@/context";
 import { CourseItem } from "./props/attendance";
-import { StudentFilters } from "../components/students";
+import { StudentFilters } from "../components/Students";
 
 declare global {
     interface ChildrenProps {

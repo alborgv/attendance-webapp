@@ -1,5 +1,5 @@
 import { useQuery } from "@/context/QueryContext";
-import { Student } from "@/components/students";
+import { Student } from "@/components/Students";
 import { useRef, useState } from "react";
 
 interface StudentSelectionProps {

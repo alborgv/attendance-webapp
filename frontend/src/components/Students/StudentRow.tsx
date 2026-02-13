@@ -1,6 +1,6 @@
 import React from "react";
 import AttendanceButton from "@/components/ui/Button/OptionAttendanceButton";
-import { StudentRowProps } from "@/components/students";
+import { StudentRowProps } from "@/components/Students";
 
 const defaultAvatar =
 "data:image/svg+xml;utf8,\

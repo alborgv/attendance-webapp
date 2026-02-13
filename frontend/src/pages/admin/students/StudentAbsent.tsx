@@ -1,7 +1,7 @@
 import { StudentAbsentFilter } from '@/components/filters';
 import Layout from '@/components/Layout';
-import { StudentAbsentProps } from '@/components/students';
-import StudentAbsentTable from '@/components/students/tables/StudentAbsentTable';
+import { StudentAbsentProps } from '@/components/Students';
+import StudentAbsentTable from '@/components/Students/tables/StudentAbsentTable';
 import ExportExcelButton from '@/components/ui/Button/ExportExcelButton';
 import { VolverPanel } from '@/components/ui/VolverPanel';
 import { ExcelColumn } from '@/context';

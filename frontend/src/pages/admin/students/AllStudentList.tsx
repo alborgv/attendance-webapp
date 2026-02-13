@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout';
-import { Student, StudentFilters } from '@/components/students';
-import StudentListTable from '@/components/students/tables/StudentListTable';
+import { Student, StudentFilters } from '@/components/Students';
+import StudentListTable from '@/components/Students/tables/StudentListTable';
 import { VolverPanel } from '@/components/ui/VolverPanel';
 import { useQuery } from '@/context/QueryContext';
 import { useEffect, useState } from 'react';

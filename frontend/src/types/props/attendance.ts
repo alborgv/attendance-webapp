@@ -1,5 +1,5 @@
 import { Students } from "../models/user";
-import { Student } from "../../components/students";
+import { Student } from "../../components/Students";
 
 export type AttendanceState = "P" | "A" | "J" | "none";
 

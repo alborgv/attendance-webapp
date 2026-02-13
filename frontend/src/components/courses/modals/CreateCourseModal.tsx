@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useQuery } from '@/context/QueryContext';
-import { Student } from '@/components/students';
+import { Student } from '@/components/Students';
 import StudentSelectionModal from '../../students/modals/StudentSelectionModal';
 import { CreateCourseModalProps } from '@/types/ui/modals';
 

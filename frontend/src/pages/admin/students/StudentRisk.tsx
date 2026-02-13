@@ -1,7 +1,7 @@
 import { StudentAlertFilter } from '@/components/filters';
 import Layout from '@/components/Layout';
-import { StudentAlertProps } from '@/components/students';
-import StudentAlertTable from '@/components/students/tables/StudentAlertTable';
+import { StudentAlertProps } from '@/components/Students';
+import StudentAlertTable from '@/components/Students/tables/StudentAlertTable';
 import ExportExcelButton from '@/components/ui/Button/ExportExcelButton';
 import { VolverPanel } from '@/components/ui/VolverPanel';
 import { ExcelColumn } from '@/context';

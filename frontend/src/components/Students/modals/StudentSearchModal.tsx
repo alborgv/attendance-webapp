@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { useQuery } from '@/context/QueryContext';
-import { Student } from '@/components/students';
+import { Student } from '@/components/Students';
 import { StudentSearchModalProps } from '@/types/ui/modals';
 import ConfirmModal from '../../ui/Modal/ConfirmModal';
 import { useToast } from '@/hooks/useToast';

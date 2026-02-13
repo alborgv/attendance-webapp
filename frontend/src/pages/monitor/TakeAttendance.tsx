@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import StudentList from "@/components/students/StudentList";
+import StudentList from "@/components/Students/StudentList";
 import Calendar from "@/components/ui/Calendar";
 import AttendanceStats from "@/components/attendance/AttendanceStats";
 import Header from "@/components/attendance/AttendanceHeader";
@@ -12,7 +12,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import AttendanceButton from "@/components/ui/Button/AttendanceButton";
 import { IoArrowBack } from "react-icons/io5";
 import TakeAttendanceSkeleton from "@/components/ui/Skeleton/TakeAttendanceSkeleton";
-import { Student } from "@/components/students";
+import { Student } from "@/components/Students";
 import ConfirmModal from "@/components/ui/Modal/ConfirmModal";
 
 export default function TakeAttendance() {

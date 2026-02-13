@@ -1,5 +1,5 @@
 import { StudentAbsentFilter, StudentAbsentPreset } from "@/components/filters";
-import { StudentAbsentProps } from "@/components/students";
+import { StudentAbsentProps } from "@/components/Students";
 
 function parseLocalDate(dateStr: string): Date {
   const [year, month, day] = dateStr.split("-").map(Number);
