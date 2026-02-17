@@ -51,7 +51,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({ title, icon, value, url }) =>
     if (!url) return CardContent;
 
     return (
-        <Link to={`${urlBackend}${url}`} className="block">
+        <Link to={url} className="block">
             {CardContent}
         </Link>
     )
