@@ -8,8 +8,6 @@ const MetricsCard: React.FC<MetricsCardProps> = ({ title, icon, value, url }) =>
         typeof value === "number" ||
         (typeof value === "string" && !isNaN(Number(value)));
 
-    const urlBackend = import.meta.env.VITE_HOME_URL;
-
     const CardContent = (
         <div className="group bg-linear-to-br bg-white p-6 rounded-2xl shadow-lg
                         border-slate-200 hover:shadow-2xl hover:scale-[1.02] transition-all
