@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { AttendanceButtonProps } from "@/types/props/buttons";
 import { IoSendOutline, IoReload, IoClose, IoDocumentTextOutline, IoAdd, IoPersonAdd } from "react-icons/io5";
-import StudentSearchModal from "../../students/modals/StudentSearchModal";
-import CreateStudentModal from "../../students/modals/CreateStudentModal";
+import StudentSearchModal from "../../Students/modals/StudentSearchModal";
+import CreateStudentModal from "../../Students/modals/CreateStudentModal";
 import IconActionButton from "./IconActionButton";
 import { LuLockKeyhole } from "react-icons/lu";
 import ConfirmModal from "../Modal/ConfirmModal";

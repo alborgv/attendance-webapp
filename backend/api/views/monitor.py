@@ -2,17 +2,21 @@ from django.contrib.auth.models import User
 
 from rest_framework import status, generics
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from ..models import UserProfile
-
 from ..permissions import IsMonitor, IsAdmin
 from ..serializers import ChangeMonitorRoleSerializer, CrearMonitorSerializer, MonitorSerializer
-
+from ..pagination import StandardResultsSetPagination
+from ..filters import MonitorFilter
             
 class MonitorListView(generics.ListAPIView):
     serializer_class = MonitorSerializer
     permission_class = [IsMonitor | IsAdmin]
-
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = MonitorFilter
+    pagination_class = StandardResultsSetPagination
+    
     def get_queryset(self):
         return (
             User.objects

@@ -189,3 +189,40 @@ class EstudianteRiesgoFilter(django_filters.FilterSet):
     class Meta:
         model = UserProfile
         fields = ["estado", "jornada", "username"]
+
+
+
+
+class MonitorFilter(django_filters.FilterSet):
+
+    estado = django_filters.CharFilter(
+        field_name="profile__estado"
+    )
+
+    username = django_filters.CharFilter(method="filter_username")
+
+    def filter_username(self, queryset, name, value):
+
+        if value.isdigit():
+            return queryset.filter(profile__numero_identificacion__icontains=value)
+
+        queryset = queryset.annotate(
+            nombre_completo_db=Concat(
+                Coalesce(F('profile__primer_nombre'), Value('')),
+                Value(' '),
+                Coalesce(F('profile__segundo_nombre'), Value('')),
+                Value(' '),
+                Coalesce(F('profile__primer_apellido'), Value('')),
+                Value(' '),
+                Coalesce(F('profile__segundo_apellido'), Value('')),
+            )
+        )
+
+        return queryset.filter(
+            Q(nombre_completo_db__icontains=value) |
+            Q(numero_identificacion__icontains=value)
+        )
+
+    class Meta:
+        model = User
+        fields = ["estado", "username"]

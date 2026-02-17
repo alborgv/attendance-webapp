@@ -24,7 +24,7 @@ const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({ selectedCourse, sel
                 
                 <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 mt-1 text-md sm:text-sm text-gray-600">
                     <span className="truncate">
-                        Monitor: <strong className="text-gray-800">{selectedCourse?.monitor.primer_nombre} {selectedCourse?.monitor.primer_apellido}</strong>
+                        Monitor: <strong className="text-gray-800">{typeof selectedCourse.monitor !== "string" ? selectedCourse.monitor.nombre_completo : null}</strong>
                     </span>
                     
                     <span className="hidden md:inline">•</span>

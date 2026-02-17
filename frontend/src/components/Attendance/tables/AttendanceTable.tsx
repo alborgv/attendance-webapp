@@ -75,12 +75,17 @@ const AttendanceTable: React.FC = () => {
 
         if (searchTerm) {
             const term = searchTerm.toLowerCase();
-            filtered = filtered.filter(item =>
+            filtered = filtered.filter(item =>{
+                
+                if (!item.monitor || typeof item.monitor === "string") {
+                    return item.modulo?.toLowerCase().includes(term);
+                }
+
                 item.monitor.numero_identificacion?.toString().toLowerCase().includes(term) ||
                 item.monitor.nombre_completo?.toLowerCase().includes(term) ||
                 item.modulo.toLowerCase().includes(term) ||
                 item.monitor.tipo_identificacion?.toLowerCase().includes(term)
-            );
+            });
         }
 
         filtered = [...filtered].sort((a, b) => {
@@ -91,8 +96,17 @@ const AttendanceTable: React.FC = () => {
             }
 
             if (sortConfig.key === 'monitor') {
-                const aValue = a.monitor.nombre_completo || '';
-                const bValue = b.monitor.nombre_completo || '';
+                
+                const aValue =
+                typeof a.monitor === "object" && a.monitor !== null
+                    ? a.monitor.nombre_completo ?? ""
+                    : "";
+                    
+                const bValue =
+                typeof b.monitor === "object" && b.monitor !== null
+                    ? b.monitor.nombre_completo ?? ""
+                    : "";
+
                 if (aValue < bValue) {
                     return sortConfig.direction === 'asc' ? -1 : 1;
                 }
@@ -101,17 +115,24 @@ const AttendanceTable: React.FC = () => {
                 }
                 return 0;
             }
+            
+            const aValue = a[sortConfig.key] ?? "";
+            const bValue = b[sortConfig.key] ?? "";
 
-            const aValue = a[sortConfig.key];
-            const bValue = b[sortConfig.key];
+            if (typeof aValue === "string" && typeof bValue === "string") {
+                return sortConfig.direction === "asc"
+                    ? aValue.localeCompare(bValue)
+                    : bValue.localeCompare(aValue);
+            }
 
-            if (aValue < bValue) {
-                return sortConfig.direction === 'asc' ? -1 : 1;
+            if (typeof aValue === "number" && typeof bValue === "number") {
+                return sortConfig.direction === "asc"
+                    ? aValue - bValue
+                    : bValue - aValue;
             }
-            if (aValue > bValue) {
-                return sortConfig.direction === 'asc' ? 1 : -1;
-            }
+
             return 0;
+
         });
 
         return filtered;
@@ -375,17 +396,28 @@ const AttendanceTable: React.FC = () => {
                                             className="hover:bg-gray-50 transition-colors duration-200 group cursor-pointer"
                                             onClick={(e) => handleCourseClick(item, e)}
                                         >
+                                            
                                             <td className="px-4 md:px-6 py-3 md:py-4">
                                                 <div className="flex items-center">
                                                     <div className="shrink-0 h-8 w-8 md:h-10 md:w-10 bg-linear-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center text-blue-600 font-bold mr-3">
-                                                        {item.monitor.nombre_completo?.charAt(0) || 'M'}
+                                                        {typeof item.monitor !== "string"
+                                                        ? item.monitor?.nombre_completo?.charAt(0) ?? "M"
+                                                        : null}
                                                     </div>
                                                     <div>
                                                         <div className="text-sm font-medium text-gray-900">
-                                                            {item.monitor.nombre_completo || "Sin nombre"}
+                                                            {typeof item.monitor !== "string"
+                                                            ? item.monitor.nombre_completo
+                                                            : null}
                                                         </div>
                                                         <div className="text-xs text-gray-500">
-                                                            {item.monitor.tipo_identificacion} {item.monitor.numero_identificacion}
+                                                            {typeof item.monitor !== "string"
+                                                            ? item.monitor.tipo_identificacion
+                                                            : null}
+                                                            &nbsp;
+                                                            {typeof item.monitor !== "string"
+                                                            ? item.monitor.numero_identificacion
+                                                            : null}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -494,14 +526,24 @@ const AttendanceTable: React.FC = () => {
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="flex items-center">
                                             <div className="h-10 w-10 md:h-12 md:w-12 bg-linear-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center text-blue-600 font-bold mr-3">
-                                                {item.monitor.nombre_completo?.charAt(0) || 'M'}
+                                                {typeof item.monitor !== "string"
+                                                ? item.monitor?.nombre_completo?.charAt(0) ?? "M"
+                                                : null}
                                             </div>
                                             <div>
                                                 <h4 className="font-semibold text-gray-900 text-sm md:text-base">
-                                                    {item.monitor.nombre_completo}
+                                                    {typeof item.monitor !== "string"
+                                                    ? item.monitor.nombre_completo
+                                                    : null}
                                                 </h4>
                                                 <p className="text-xs text-gray-500">
-                                                    {item.monitor.tipo_identificacion} {item.monitor.numero_identificacion}
+                                                    {typeof item.monitor !== "string"
+                                                    ? item.monitor.tipo_identificacion
+                                                    : null}
+                                                    
+                                                    {typeof item.monitor !== "string"
+                                                    ? item.monitor.numero_identificacion
+                                                    : null}
                                                 </p>
                                             </div>
                                         </div>

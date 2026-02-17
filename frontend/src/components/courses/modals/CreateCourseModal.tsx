@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useQuery } from '@/context/QueryContext';
 import { Student } from '@/components/Students';
-import StudentSelectionModal from '../../students/modals/StudentSelectionModal';
+import StudentSelectionModal from '../../Students/modals/StudentSelectionModal';
 import { CreateCourseModalProps } from '@/types/ui/modals';
 
 const CreateCourseModal: React.FC<CreateCourseModalProps> = ({

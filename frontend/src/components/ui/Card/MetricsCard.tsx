@@ -43,7 +43,6 @@ const MetricsCard: React.FC<MetricsCardProps> = ({ title, icon, value, url }) =>
                         ${isNumber ? "text-2xl md:text-4xl" : "text-xs md:text-sm"}
                     `}>
                         {value}
-                    {/* {isNumber ? value : (value.length > 90 ? value.substring(0, 97) + "..." : value)} */}
                 </p>
             </div>
         </div>
