@@ -117,7 +117,6 @@ const MonitorTable: React.FC<Props> = ({
     };
     
     const handleSearchChange = (username: string) => {
-        console.log("U:", username)
         onFilter({
             ...filters,
             username

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
-import AttendanceLists from "@/components/attendance/AttendanceLists";
+import AttendanceLists from "@/components/Attendance/AttendanceLists";
 import CreateCourseModal from '@/components/courses/modals/CreateCourseModal';
 import { useAuth } from '@/context/AuthContext';
 import { useQuery } from '@/context/QueryContext';

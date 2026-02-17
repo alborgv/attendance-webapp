@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import StudentList from "@/components/Students/StudentList";
 import Calendar from "@/components/ui/Calendar";
-import AttendanceStats from "@/components/attendance/AttendanceStats";
-import Header from "@/components/attendance/AttendanceHeader";
+import AttendanceStats from "@/components/Attendance/AttendanceStats";
+import Header from "@/components/Attendance/AttendanceHeader";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/context/AuthContext";
 import { useQuery } from "@/context/QueryContext";
@@ -43,7 +43,8 @@ export default function TakeAttendance() {
     type ConfirmType = "EXIT_EDIT" | "SUBMIT" | null;
     const [confirmType, setConfirmType] = useState<ConfirmType>(null);
 
-    const totalStudents = selectedCourse?.estudiantes.length || 0;
+    const totalStudents = selectedCourse?.estudiantes?.length ?? 0;
+
 
     const markedCount = Object.values(currentAttendance)
         .filter(v => v !== "none").length;
@@ -154,7 +155,6 @@ export default function TakeAttendance() {
 
     const handleDeactivateCourse = async () => {
         await deactivateCourse(selectedCourse?.id || "");
-        console.log("ETETESTSET", selectedCourse)
     };
 
     const presentCount = Object.values(currentAttendance).filter(v => v === "P").length;
@@ -190,7 +190,7 @@ export default function TakeAttendance() {
                         />
 
                         <AttendanceStats
-                            totalStudents={selectedCourse?.estudiantes.length}
+                            totalStudents={selectedCourse?.estudiantes?.length ?? 0}
                             presentCount={presentCount}
                             absentCount={absentCount}
                             leaveCount={leaveCount}

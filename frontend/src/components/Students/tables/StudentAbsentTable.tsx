@@ -185,8 +185,6 @@ const StudentAbsentTable: React.FC<Props<StudentAbsentProps>> = ({
             onSearch={handleSearchChange}
             headerActions={
                 <>
-                    {/* <StudentAbsentSelect value={filters.jornada ?? 'ALL'} onChange={handleDateChange}/> */}
-
                     <StudentAbsentSelect value={range} onChange={handleDateChange}/>
                     <StatusFilterSelect value={filters.status ?? 'A'} onChange={handleStatusChange}/>
                     <ScheduleFilterSelect value={filters.jornada ?? ''} onChange={handleScheduleChange}/>

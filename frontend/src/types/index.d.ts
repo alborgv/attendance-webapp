@@ -131,7 +131,7 @@ declare global {
         getAttendance: (filters: AttendanceFilters | null) => Promise<AttendanceItem[]>;
         getAttendanceMetrics: () => Promise<AttendanceMetricsData>;
         createCourse: (courseData: {modulo: string, fecha: string, estudiantes: number[]}) => Promise<void>;
-        addStudentCourse: (courseId: string, studentsId: number[]) => Promise<void>;
+        addStudentCourse: (courseId: string, studentsId: number[]) => Promise<CourseItem>;
         createAttendance: (cursoId: string, asistenciasData: AttendanceData, fecha?: string, observaciones?: string) => Promise<void>;
         deactivateCourse: (courseId: string) => Promise<void>;
         getAllMonitor: (params?: GetMonitor) => Promise<PaginatedResponse<MonitorProps>>;
