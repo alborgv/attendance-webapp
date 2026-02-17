@@ -220,7 +220,7 @@ class MonitorFilter(django_filters.FilterSet):
 
         return queryset.filter(
             Q(nombre_completo_db__icontains=value) |
-            Q(numero_identificacion__icontains=value)
+            Q(profile__numero_identificacion__icontains=value)
         )
 
     class Meta:

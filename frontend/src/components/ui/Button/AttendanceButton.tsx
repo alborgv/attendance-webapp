@@ -103,11 +103,6 @@ const AttendanceButton: React.FC<AttendanceButtonProps> = ({
                 cancelText="Cancelar"
                 onCancel={() => setShowConfirm(false)}
                 onConfirm={onDeactivateCourse}
-                // onConfirm={async () => {
-                //     if (!selectedCourse) return;
-                //     await deactivateCourse(selectedCourse);
-                //     setShowConfirm(false);
-                // }}
             />
 
         </>

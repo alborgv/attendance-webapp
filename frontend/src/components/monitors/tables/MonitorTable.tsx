@@ -4,6 +4,7 @@ import { Column } from '@/components/ui/Table/variants';
 import DataTable from '../../ui/Table/variants/DataTable';
 import StatusFilterSelect from '@/components/filters/StatusFilterSelect';
 import { StatusFilter } from '@/components/filters';
+import { MonitorFilters } from '..';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -11,10 +12,13 @@ interface Props {
     data: MonitorProps[];
     loading: boolean;
     onRefresh: () => void;
-    filters: StatusFilter,
-    onFilter: (status: StatusFilter) => void;
+    filters: MonitorFilters,
+    onFilter: (status: MonitorFilters) => void;
     onChangePassword: (userId: number) => void;
     onDelete: (id: number) => void;
+    count: number;
+    currentPage: number;
+    onPageChange: (page: number) => void;
 }
 
 const MonitorTable: React.FC<Props> = ({
@@ -24,7 +28,10 @@ const MonitorTable: React.FC<Props> = ({
     filters,
     onFilter,
     onChangePassword,
-    onDelete
+    onDelete,
+    count,
+    currentPage,
+    onPageChange
 }) => {
     const columns: Column<MonitorProps>[] = [
         {
@@ -103,7 +110,18 @@ const MonitorTable: React.FC<Props> = ({
     ];
 
     const handleStatusChange = (status: StatusFilter) => {
-        onFilter(status);
+        onFilter({
+            ...filters,
+            status
+        });
+    };
+    
+    const handleSearchChange = (username: string) => {
+        console.log("U:", username)
+        onFilter({
+            ...filters,
+            username
+        });
     };
     
     return (
@@ -114,9 +132,13 @@ const MonitorTable: React.FC<Props> = ({
             itemsPerPage={ITEMS_PER_PAGE}
             searchPlaceholder="Buscar monitor..."
             rowKey="id"
+            count={count}
+            currentPage={currentPage}
+            onPageChange={onPageChange}
+            onSearch={handleSearchChange}
             headerActions={
                 <>
-                    <StatusFilterSelect value={filters ?? 'A'} onChange={handleStatusChange}/>
+                    <StatusFilterSelect value={filters.status ?? 'A'} onChange={handleStatusChange}/>
 
                     <button
                         onClick={onRefresh}

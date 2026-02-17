@@ -2,15 +2,14 @@ import Layout from '@/components/Layout';
 import MonitorTable from '@/components/monitors/tables/MonitorTable';
 import { VolverPanel } from '@/components/ui/VolverPanel';
 import { useQuery } from '@/context/QueryContext';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LuUserPlus } from 'react-icons/lu';
-import { StatusFilter } from '@/components/filters';
-import { applyMonitorFilters } from '@/utils/filters/monitorFilters';
 import ConfirmModal from '@/components/ui/Modal/ConfirmModal';
 import ChangePasswordModal from '@/components/ui/Modal/ChangePasswordModal';
 import { useAuth } from '@/context/AuthContext';
 import { useToast } from '@/hooks/useToast';
 import CreateMonitorModal from '@/components/monitors/modals/CreateMonitorModal';
+import { MonitorFilters } from '@/components/monitors';
 
 export default function MonitorManagement() {
 
@@ -26,13 +25,24 @@ export default function MonitorManagement() {
     const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
-    const [filters, setFilters] = useState<StatusFilter>('A');
+    const [filters, setFilters] = useState<MonitorFilters>({
+        status: 'A'
+    });
+
+    const [count, setCount] = useState(0);
+    const [page, setPage] = useState(1);
+    const [pageSize] = useState(8);
 
     const fetchMonitors = async () => {
         setLoading(true);
         try {
-            const monitors = await getAllMonitor();
-            setData(monitors);
+            const response = await getAllMonitor({
+                ...filters,
+                page,
+                pageSize,
+            });
+            setData(response.results);
+            setCount(response.count);
         } finally {
             setLoading(false);
         }
@@ -40,7 +50,7 @@ export default function MonitorManagement() {
 
     useEffect(() => {
         fetchMonitors();
-    }, []);
+    }, [filters, page]);
 
     const handleClick = async () => {
         setCreateMonitorModalOpen(true);
@@ -50,10 +60,10 @@ export default function MonitorManagement() {
         setCreateMonitorModalOpen(false);
     }
 
-    const handleFilter = (status: StatusFilter) => {
-        setFilters(status);
-    }
-
+    const handleFilter = (newFilters: MonitorFilters) => {
+        setPage(1);
+        setFilters(newFilters);
+    };
     
     const handleDelete = (id: number) => {
         setSelectedMonitorId(id);
@@ -99,11 +109,10 @@ export default function MonitorManagement() {
 
     };
 
-    const filteredData = useMemo(
-        () => applyMonitorFilters(data, filters),
-        [data, filters]
-    );
-    
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage);
+    };
+
     return (
         <Layout>
             <div className="mb-8 p-4 md:p-6">
@@ -130,13 +139,16 @@ export default function MonitorManagement() {
                     </div>
                 </div>
                 <MonitorTable 
-                    data={filteredData}
+                    data={data}
                     loading={loading}
                     onRefresh={fetchMonitors}
                     filters={filters}
                     onFilter={handleFilter}
                     onChangePassword={handleOpenChangePassword}
                     onDelete={handleDelete}
+                    count={count}
+                    currentPage={page}
+                    onPageChange={handlePageChange}
                 />
             </div>
             

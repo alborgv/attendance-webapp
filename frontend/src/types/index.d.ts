@@ -109,6 +109,11 @@ declare global {
         status?: string;
     }
 
+    interface GetMonitor extends PaginationParams{
+        username?: string;
+        status?: string;
+    }
+
     interface QueryContextType {
         selectedCourse: CourseItem | null;
         setSelectedCourse: (id: CourseItem) => void;
@@ -129,7 +134,7 @@ declare global {
         addStudentCourse: (courseId: string, studentsId: number[]) => Promise<void>;
         createAttendance: (cursoId: string, asistenciasData: AttendanceData, fecha?: string, observaciones?: string) => Promise<void>;
         deactivateCourse: (courseId: string) => Promise<void>;
-        getAllMonitor: () => Promise<Monitor>;
+        getAllMonitor: (params?: GetMonitor) => Promise<PaginatedResponse<MonitorProps>>;
         createMonitor: (monitor: MonitorProps) => Promise<void>;
         addMonitor: (userId: number) => Promise<void>;
         deleteMonitor: (userId: number) => Promise<void>;

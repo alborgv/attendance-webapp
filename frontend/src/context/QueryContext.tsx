@@ -100,7 +100,7 @@ export const QueryProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return services.course.getCourses(filters);
     };
 
-    const getAllCourse = async (params?: {
+    const getAllCourse = (params?: {
         status?: string;
         course?: string;
         page?: number;
@@ -116,9 +116,14 @@ export const QueryProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return services.course.deactivateCourse(courseId);
     };
 
-    const getAllMonitor = () => {
+    const getAllMonitor = (params?: {
+        status?: string;
+        username?: string;
+        page?: number;
+        pageSize?: number;
+    }) => {
         if (!services) return Promise.resolve([]);
-        return services.monitor.getAllMonitor();
+        return services.monitor.getAllMonitor(params);
     }
     const createMonitor = (monitor: MonitorProps) => {
         if (!services) return Promise.resolve([]);

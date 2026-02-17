@@ -12,7 +12,7 @@ from ..filters import MonitorFilter
             
 class MonitorListView(generics.ListAPIView):
     serializer_class = MonitorSerializer
-    permission_class = [IsMonitor | IsAdmin]
+    permission_classes = [IsMonitor | IsAdmin]
     filter_backends = [DjangoFilterBackend]
     filterset_class = MonitorFilter
     pagination_class = StandardResultsSetPagination
