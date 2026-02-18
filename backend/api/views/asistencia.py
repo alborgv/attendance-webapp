@@ -45,6 +45,7 @@ class AsistenciaMetricasView(APIView):
             
             cursos_activos = Curso.objects.filter(estado='A').count()
             total_estudiantes = UserProfile.objects.filter(role="estudiante").distinct().count()
+            total_estudiantes_activos = UserProfile.objects.filter(role="estudiante", estado="A").distinct().count()
             total_ausentes = Asistencia.objects.filter(
                 estado='A',
                 curso__estado='A',
@@ -78,6 +79,7 @@ class AsistenciaMetricasView(APIView):
             
             metrics_data = {
                 'cursos_activos': cursos_activos,
+                'total_estudiantes_activos': total_estudiantes_activos,
                 'total_estudiantes': total_estudiantes,
                 'total_ausentes': total_ausentes,
                 'modulo_mas_ausentes': nombre_modulo_mas_ausentes,

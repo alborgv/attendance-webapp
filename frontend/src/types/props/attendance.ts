@@ -47,6 +47,7 @@ export interface AttendanceStatsProps {
 export interface AttendanceMetricsData {
   cursos_activos: number;
   total_estudiantes: number;
+  total_estudiantes_activos: number;
   total_ausentes: number;
   modulo_mas_ausentes: string;
   total_modulo_mas_ausentes: number;

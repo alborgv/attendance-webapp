@@ -98,7 +98,7 @@ const AttendanceMetrics: React.FC = () => {
                     <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg">
                         <FaChartLine />
                         <span className="text-sm font-medium">
-                            {metrics ? formatNumber(metrics.total_estudiantes) : 0} estudiantes activos
+                            {metrics ? formatNumber(metrics.total_estudiantes_activos) : 0} estudiantes activos
                         </span>
                     </div>
                     <button

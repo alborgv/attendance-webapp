@@ -1,4 +1,5 @@
 import { MetricsCardProps } from "@/types/ui/cards";
+import { formatNumber } from "@/utils/formatNumber";
 import { HiTrendingUp } from "react-icons/hi";
 import { Link } from "react-router-dom";
 
@@ -40,7 +41,7 @@ const MetricsCard: React.FC<MetricsCardProps> = ({ title, icon, value, url }) =>
                         font-roboto font-semibold text-gray-900
                         ${isNumber ? "text-2xl md:text-4xl" : "text-xs md:text-sm"}
                     `}>
-                        {value}
+                        {isNumber ? formatNumber(value) : value}
                 </p>
             </div>
         </div>
