@@ -287,6 +287,7 @@ class AsistenciaBulkSerializer(serializers.Serializer):
 class AsistenciaMetricasSerializer(serializers.Serializer):
     cursos_activos = serializers.IntegerField()
     total_estudiantes = serializers.IntegerField()
+    total_estudiantes_activos = serializers.IntegerField()
     total_ausentes = serializers.IntegerField()
     modulo_mas_ausentes = serializers.CharField()
     id_modulo_mas_ausentes = serializers.CharField()
