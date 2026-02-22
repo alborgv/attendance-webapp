@@ -66,7 +66,6 @@ const CreateCourseModal: React.FC<CreateCourseModalProps> = ({
 
             const result = await createCourse(courseData);
             
-            console.log("RES:", result)
             onCourseCreated(result);
             handleClose();
             

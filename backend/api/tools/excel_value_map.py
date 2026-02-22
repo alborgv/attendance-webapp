@@ -1,19 +1,8 @@
-# excel_value_maps.py
-# Maps de valores provenientes de Excel → valores internos del modelo Django
-
-
-# -------------------------
-# Sexos
-# -------------------------
-
 SEXO_MAP = {
     "Masculino": "M",
     "Femenino": "F",
 }
 
-# -------------------------
-# Tipo de identificación
-# -------------------------
 TIPO_IDENTIFICACION_MAP = {
     "Cédula de Ciudadanía": "CC",
     "Cédula de Extranjería": "CE",
@@ -21,12 +10,10 @@ TIPO_IDENTIFICACION_MAP = {
     "Pasaporte": "PAS",
     "Estudiante Extra": "EX",
     "Monitor": "MN",
+    "Permiso por Protección Temporal": "PPT",
+    "Registro Civil de Nacimiento": "RC"
 }
 
-
-# -------------------------
-# Estados académicos
-# -------------------------
 ESTADO_MAP = {
     "Activo": "A",
     "Inactivo": "I",
@@ -34,24 +21,16 @@ ESTADO_MAP = {
     "Cancelado": "C",
 }
 
-
-# -------------------------
-# Estados civiles
-# -------------------------
 ESTADO_CIVIL_MAP = {
     "Soltero/a": "SOL",
-    "Soltero(a)": "SOL",   # por si Excel viene distinto
+    "Soltero(a)": "SOL",
     "Casado/a": "CAS",
     "Divorciado/a": "DIV",
     "Viudo/a": "VIU",
     "Unión Libre": "UL",
-    "Union Libre": "UL",   # sin tilde
+    "Union Libre": "UL",
 }
 
-
-# -------------------------
-# Tipos de sangre
-# -------------------------
 TIPO_SANGRE_MAP = {
     "A+": "A+",
     "A-": "A-",
@@ -63,10 +42,6 @@ TIPO_SANGRE_MAP = {
     "O-": "O-",
 }
 
-
-# -------------------------
-# Zonas
-# -------------------------
 ZONA_MAP = {
     "Urbana": "U",
     "Rural": "R",

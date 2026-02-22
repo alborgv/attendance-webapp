@@ -30,6 +30,7 @@ const StudentListTable: React.FC<Props<Student>> = ({
         currentPage,
         onPageChange
     }) => {
+    
     const columns: Column<Student>[] = [
         {
             key: 'student',

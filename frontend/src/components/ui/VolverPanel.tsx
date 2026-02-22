@@ -16,11 +16,12 @@ export const VolverPanel = ({
     <Link
       to={to}
       className={`
+        inline-flex items-center
         text-blue-600 hover:text-blue-800
-        font-medium flex items-center
+        font-medium
         transition-colors cursor-pointer
-        text-sm sm:text-base px-4
-        ${className}
+        text-sm sm:text-base
+        px-4 ${className}
       `}
     >
       <IoArrowBack size={14} className="mr-1 shrink-0" />

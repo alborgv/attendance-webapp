@@ -30,7 +30,6 @@ const StudentAbsentSelect: React.FC<FilterProps<StudentAbsentFilter>> = ({
   }, []);
 
   useEffect(() => {
-    console.log("PRESET")
     const paramsPreset = searchParams.get("preset");
 
     if (!paramsPreset) return;

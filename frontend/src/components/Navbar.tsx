@@ -33,7 +33,7 @@ const Navbar = () => {
         <nav className="bg-primary px-4 py-3 flex justify-between items-center">
             <Link to="/" className="flex items-center ml-4 cursor-pointer">
                 <img src={elyonLogo} alt="Elyon Logo" className="h-12" />
-                <p className="ml-4 text-lg text-white font-semibold">ELYON YIREH</p>
+                <p className="ml-4 text-lg text-white font-semibold">ASISTENCIA</p>
             </Link>
 
             <div className="relative" ref={dropdownRef}><button

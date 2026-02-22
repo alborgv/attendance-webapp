@@ -22,7 +22,6 @@ export default function Attendance() {
             setLoading(true);
             setError(null);
             const data = await getCourses({ monitor_username: user?.username || "" });
-            console.log("DATA:", data)
             setCourses(data ?? []);
         } catch (err) {
             console.error(err);

@@ -6,11 +6,30 @@ from django.db import transaction
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 
-
+from django.utils.translation import gettext_lazy as _
 from .models import UserProfile, Curso, Asistencia
 
 
 class TokenSerializer(TokenObtainPairSerializer):
+    default_error_messages = {
+        "no_active_account": _("Usuario o contraseña incorrectos."),
+        "invalid_credentials": _("Usuario o contraseña incorrectos."),
+        "user_not_found": _("El usuario no existe."),
+        "user_inactive": _("La cuenta está desactivada."),
+        "password_changed": _("Tu contraseña fue actualizada. Inicia sesión nuevamente."),
+    
+        "account_locked": _("La cuenta está temporalmente bloqueada por múltiples intentos fallidos."),
+        "token_invalid": _("El token no es válido."),
+        "token_expired": _("La sesión ha expirado. Inicia sesión nuevamente."),
+        "authentication_failed": _("No fue posible autenticar al usuario."),
+    
+        "required": _("Este campo es obligatorio."),
+        "blank": _("Este campo no puede estar vacío."),
+        "invalid": _("El valor ingresado no es válido."),
+
+        "permission_denied": _("No tienes permisos para realizar esta acción."),
+    }
+    
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)

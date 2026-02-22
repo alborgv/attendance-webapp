@@ -35,7 +35,7 @@ const TableBody = <T,>({
     return (
         <tbody className="divide-y divide-gray-200">
             {data.map(row => (
-                <tr key={getKey(row)} className="hover:bg-gray-50">
+                <tr key={getKey(row)} className={`hover:bg-gray-50`}>
                 {columns.map(col => (
                     <td key={col.key} className="px-6 py-4">
                     {col.render(row)}

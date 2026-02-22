@@ -38,7 +38,7 @@ export const createStudentsService = (http: {
                 nombre_completo: item.nombre_completo,
                 tipo_identificacion: item.tipo_identificacion,
                 numero_identificacion: item.numero_identificacion,
-                numero: item.celular ?? "",
+                celular: item.celular ?? "",
                 jornada: item.jornada,
                 estado: item.estado,
             })),

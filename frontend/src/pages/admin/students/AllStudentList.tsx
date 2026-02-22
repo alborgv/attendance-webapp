@@ -42,7 +42,6 @@ export default function AllStudentList() {
     }, [filters, page]);
 
     const handleFilter = async (filters: StudentFilters) => {
-        console.log("F2:", filters)
         setFilters(filters);
     }
     

@@ -5,6 +5,7 @@ from ..services.excel_exporter import export_to_excel
 from ..tools.excel_value_map import TIPO_IDENTIFICACION_MAP, SEXO_MAP, ESTADO_MAP, ESTADO_CIVIL_MAP, TIPO_SANGRE_MAP, ZONA_MAP
 
 import pandas as pd
+import numpy as np
 from django.contrib.auth.models import User
 from django.db import transaction
 from rest_framework.views import APIView
@@ -67,23 +68,21 @@ class UploadExcelView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-
         MAX_ROWS = 999
 
         row_count = len(df)
 
-        # if row_count > MAX_ROWS:
-        #     return Response(
-        #         {
-        #             "detail": "El archivo supera el número máximo de registros permitidos",
-        #             "max_rows": MAX_ROWS,
-        #             "received_rows": row_count
-        #         },
-        #         status=status.HTTP_400_BAD_REQUEST
-        #     )
+        if row_count > MAX_ROWS:
+            return Response(
+                {
+                    "detail": "El archivo supera el número máximo de registros permitidos",
+                    "max_rows": MAX_ROWS,
+                    "received_rows": row_count
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         received_headers = list(df.columns)
-
         if received_headers != EXPECTED_HEADERS:
             a = Response(
                 {
@@ -92,7 +91,7 @@ class UploadExcelView(APIView):
                     "received": received_headers
                 },
                 status=status.HTTP_400_BAD_REQUEST)
-            print("A:", a)
+            
             return Response(
                 {
                     "detail": "Formato no soportado: las columnas no coinciden exactamente",
@@ -106,6 +105,7 @@ class UploadExcelView(APIView):
         created = 0
         updated = 0
         skipped = 0
+        
         for idx, row in df.iterrows():
 
             try:
@@ -175,6 +175,8 @@ class UploadExcelView(APIView):
                         "pertenece_regimen_contributivo": row["Pertenece al régimen contributivo"],
                     }
 
+                    data = clean_dict(data)
+                    
                     if profile:
                         for field, value in data.items():
                             setattr(profile, field, value)
@@ -191,6 +193,7 @@ class UploadExcelView(APIView):
                             last_name=row["Primer apellido"],
                             email=row["Correo electrónico"],
                         )
+                        print("USER:", user)
 
                         UserProfile.objects.create(
                             user=user,
@@ -208,7 +211,8 @@ class UploadExcelView(APIView):
                     "numero_identificacion": numero_id if 'numero_id' in locals() else None,
                     "error": str(e)
                 })
-                print(f"⛔ ESTUDIANTE OMITIDO (fila {idx + 2}): {e}")
+                print(f"ESTUDIANTE ERROR: {numero_id} || {errors}")
+                
                 continue
 
 

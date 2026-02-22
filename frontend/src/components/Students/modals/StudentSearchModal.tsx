@@ -58,7 +58,6 @@ const StudentSearchModal: React.FC<StudentSearchModalProps> = ({
 
         if (value.length >= 4) {
             const students = await getAllStudentsBasic({username: value});
-            console.log("S:", students)
             setFilteredStudents(students.results);
         } else {
             setFilteredStudents([]);

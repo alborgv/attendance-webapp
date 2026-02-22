@@ -96,7 +96,6 @@ export default function UploadFileModal({ isOpen, onClose, onNext }: UploadFileM
             setLoading(true);
             await onNext?.(file)
         } catch (err: any) {
-            console.log("ERR:", err)
             setError(err.message || 'Error al crear el monitor');
         } finally {
             setLoading(false);

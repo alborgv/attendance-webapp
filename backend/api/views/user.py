@@ -9,7 +9,6 @@ class ChangeUserPasswordView(generics.GenericAPIView):
     serializer_class = ChangePasswordSerializer
     queryset = User.objects.all()
     lookup_field = 'id'
-    # permission_classes = [IsAuthenticated]
 
     def patch(self, request, *args, **kwargs):
         user = self.get_object()

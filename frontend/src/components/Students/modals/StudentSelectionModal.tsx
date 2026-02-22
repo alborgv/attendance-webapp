@@ -23,13 +23,10 @@ const StudentSelectionModal: React.FC<StudentSelectionProps> = ({
     const { getAllStudentsBasic } = useQuery();
 
     const handleSearchStudent = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log("HANDLEEEEEEEE")
         const value = e.target.value;
         setSearchTerm(value);
         if (value.length >= 4) {
-            console.log("V:", value)
             const students = await getAllStudentsBasic({username: value});
-            console.log("ST:", students)
             setFilteredStudents(students.results);
         } else {
             setFilteredStudents([]);

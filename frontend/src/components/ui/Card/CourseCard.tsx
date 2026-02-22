@@ -11,7 +11,6 @@ dayjs.locale("es")
 
 const CourseCard: React.FC<CourseCardProps> = ({ course, onContinue, index }) => {
     const isActive = course.estado === "A";
-    console.log("COUR:", course)
     return (
         <div
             key={index}

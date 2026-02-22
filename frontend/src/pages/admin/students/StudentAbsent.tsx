@@ -28,13 +28,11 @@ export default function StudentAbsent() {
     const fetchStudentAbsent = async () => {
         setLoading(true);
         try {
-            console.log("F:", filters)
             const response = await StudentAbsent({
                 ...filters,
                 page,
                 pageSize,
             });
-            console.log("RES:", response)
 
             setData(response.results);
             setCount(response.count);

@@ -19,5 +19,5 @@ export interface DataTableProps<T> {
     itemsPerPage?: number;
     headerActions?: React.ReactNode;
     emptyMessage?: string;
-    rowKey: keyof T | ((row: T) => string | number)
+    rowKey: keyof T | ((row: T) => string | number);
 }

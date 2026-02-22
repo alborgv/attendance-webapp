@@ -14,6 +14,7 @@ import { IoArrowBack } from "react-icons/io5";
 import TakeAttendanceSkeleton from "@/components/ui/Skeleton/TakeAttendanceSkeleton";
 import { Student } from "@/components/Students";
 import ConfirmModal from "@/components/ui/Modal/ConfirmModal";
+import { useToast } from "@/hooks/useToast";
 
 export default function TakeAttendance() {
     const { curso } = useParams<string>();
@@ -23,6 +24,8 @@ export default function TakeAttendance() {
     const { selectedCourse, setSelectedCourse, getAttendance,
         getCourses, addStudentCourse, createAttendance,
         createStudentBasic, deactivateCourse} = useQuery();
+
+    const toast = useToast();
 
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -155,6 +158,8 @@ export default function TakeAttendance() {
 
     const handleDeactivateCourse = async () => {
         await deactivateCourse(selectedCourse?.id || "");
+        toast.warning(`El curso "${selectedCourse?.modulo || "error"} fue desactivado!"`)
+        navigate("/");
     };
 
     const presentCount = Object.values(currentAttendance).filter(v => v === "P").length;
@@ -275,6 +280,7 @@ export default function TakeAttendance() {
                         }));
 
                         setIsEdit(false);
+                        toast.success("La asistencia fue registrada correctamente!")
                     }
 
                     setConfirmType(null);

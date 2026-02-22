@@ -21,7 +21,7 @@ const DataTable = <T,>({
     count,
     currentPage,
     onPageChange,
-    onSearch
+    onSearch,
 }: DataTableProps<T>) => {
     const [searchTerm, setSearchTerm] = useState('');
 

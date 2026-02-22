@@ -99,7 +99,6 @@ const StudentRiskTable: React.FC<Props<StudentAlertProps>> = ({
     ];
 
     const handleStatusChange = (status: StatusFilter) => {
-        console.log("S:", status)
         onFilter({
             ...filters,
             status
