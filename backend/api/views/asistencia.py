@@ -27,11 +27,12 @@ class CrearAsistenciaView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
+        print("SERI:", serializer)
         asistencias_creadas = serializer.save()
         
         response_serializer = AsistenciaSerializer(asistencias_creadas, many=True)
-        
+        # print("AC:", asistencias_creadas[0])
+        print("RS:", response_serializer.data)
         return Response({
             "message": f"Se procesaron {len(asistencias_creadas)} asistencias",
             "asistencias": response_serializer.data

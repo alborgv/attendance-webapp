@@ -112,7 +112,7 @@ const StudentSelectionModal: React.FC<StudentSelectionProps> = ({
                                                 className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
                                             />
                                             <div>
-                                                <h3 className="font-medium text-gray-900">{student.nombre_completo}{student.id}</h3>
+                                                <h3 className="font-medium text-gray-900">{student.nombre_completo}</h3>
                                                 <p className="text-sm text-gray-600">
                                                     {student.tipo_identificacion}: {student.numero_identificacion}
                                                 </p>

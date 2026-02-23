@@ -89,47 +89,6 @@ class EstudiantesRiesgoView(ListAPIView):
             .distinct()
         )
 
-# class EstudiantesRiesgoView(ListAPIView):
-#     # permission_classes = [IsAdmin]
-#     serializer_class = EstudianteRiesgoSerializer
-#     pagination_class = StandardResultsSetPagination
-#     filter_backends = [DjangoFilterBackend]
-#     filterset_class = EstudianteRiesgoFilter
-
-#     def get(self, request, *args, **kwargs):
-#         estudiantes_con_bajas = (
-#             UserProfile.objects
-#             .filter(
-#                 role='estudiante',
-#                 asistencias__estado='A',
-#                 asistencias__curso__estado='A'
-#             )
-#             .annotate(
-#                 total_inasistencia=Count(
-#                     'asistencias',
-#                     filter=Q(asistencias__estado='A')
-#                 )
-#             )
-#             .filter(total_inasistencia__gt=3)
-#             .distinct()
-#         )
-#         data = [
-#             {
-#                 "id": e.user.id,
-#                 "nombre_completo": f"{e.user.get_full_name()}",
-#                 "tipo_documento": e.tipo_identificacion,
-#                 "numero_documento": e.numero_identificacion,
-#                 "celular": e.celular,
-#                 "estado": e.estado,
-#                 "jornada": e.jornada,
-#                 "total_inasistencia": e.total_inasistencia,
-#             }
-#             for e in estudiantes_con_bajas
-#         ]
-#         serializer = self.serializer_class(data, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 class EstudianteAusenteRangoView(ListAPIView):
     serializer_class = EstudianteAusenteSerializer
     pagination_class = StandardResultsSetPagination

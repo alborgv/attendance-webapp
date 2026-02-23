@@ -11,6 +11,7 @@ export interface AttendanceButtonProps {
     onDeactivateCourse: () => void;
     course: CourseItem;
     canSubmit?: boolean;
+    hasAttendance?: boolean;
 }
 
 

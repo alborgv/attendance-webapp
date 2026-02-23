@@ -5,7 +5,6 @@ import Calendar from "@/components/ui/Calendar";
 import AttendanceStats from "@/components/Attendance/AttendanceStats";
 import Header from "@/components/Attendance/AttendanceHeader";
 import Layout from "@/components/Layout";
-import { useAuth } from "@/context/AuthContext";
 import { useQuery } from "@/context/QueryContext";
 import { AttendanceState } from "@/types/props/attendance";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -20,7 +19,6 @@ export default function TakeAttendance() {
     const { curso } = useParams<string>();
     const navigate = useNavigate();
 
-    const { user } = useAuth();
     const { selectedCourse, setSelectedCourse, getAttendance,
         getCourses, addStudentCourse, createAttendance,
         createStudentBasic, deactivateCourse} = useQuery();
@@ -54,40 +52,43 @@ export default function TakeAttendance() {
 
     const isAttendanceComplete = markedCount === totalStudents;
 
+    const fetchAttendance = async () => {
+        try {
+            setIsLoading(true);
+            const dateKey = format(selectedDate, "yyyy-MM-dd");
+            const attendanceInfo = await getAttendance({ fecha: dateKey, curso });
+            
+            const attendanceMap = attendanceInfo.reduce((acc, student) => {
+                acc[student.estudiante.numero_identificacion] = student.estado || "none";
+                return acc;
+            }, {} as Record<string, AttendanceState>);
+
+            console.log("ATT MAP:", attendanceMap)
+            setAttendanceByDate(prev => ({
+                ...prev,
+                [dateKey]: attendanceMap
+            }));
+
+            setAttendanceOriginalByDate(prev => ({
+                ...prev,
+                [dateKey]: attendanceMap
+            }));
+            setIsLoading(false);
+
+        } catch (error) {
+            navigate('/');
+            console.error("Error fetching attendance:", error);
+        }
+    };
+
 
     useEffect(() => {
-        const fetchAttendance = async () => {
-            try {
-                const dateKey = format(selectedDate, "yyyy-MM-dd");
-                const attendanceInfo = await getAttendance({ fecha: dateKey, curso });
-
-                const attendanceMap = attendanceInfo.reduce((acc, student) => {
-                    acc[student.estudiante.numero_identificacion] = student.estado || "none";
-                    return acc;
-                }, {} as Record<string, AttendanceState>);
-
-                setAttendanceByDate(prev => ({
-                    ...prev,
-                    [dateKey]: attendanceMap
-                }));
-
-                setAttendanceOriginalByDate(prev => ({
-                    ...prev,
-                    [dateKey]: attendanceMap
-                }));
-                setIsLoading(false);
-
-            } catch (error) {
-                navigate('/');
-                console.error("Error fetching attendance:", error);
-            }
-        };
-
         fetchAttendance();
-    }, [selectedDate, curso, user]);
+    }, [selectedDate]);
 
 
     useEffect(() => {
+        setIsLoading(true);
         if (!curso) {
             navigate('/');
             return;
@@ -99,9 +100,11 @@ export default function TakeAttendance() {
         };
 
         loadCourse();
+        setIsLoading(false);
     }, [curso]);
 
     const setAttendance = (documentId: string, state: AttendanceState) => {
+        console.log("ATT:", documentId, state)
         setAttendanceByDate(prev => ({
             ...prev,
             [dateKey]: {
@@ -170,6 +173,12 @@ export default function TakeAttendance() {
         return <TakeAttendanceSkeleton />;
     }
 
+    const handleSelectedDate = async (date: Date) => {
+        setIsLoading(true);
+        setSelectedDate(date)
+        setIsLoading(false);
+    }
+
     return (
         <Layout>
             <div className="min-h-screen p-4 md:p-6">
@@ -189,7 +198,7 @@ export default function TakeAttendance() {
                             currentMonth={currentMonth}
                             selectedDate={selectedDate}
                             onMonthChange={setCurrentMonth}
-                            onDateSelect={setSelectedDate}
+                            onDateSelect={handleSelectedDate}
                             getDateAttendanceStatus={getDateAttendanceStatus}
                             isEdit={isEdit}
                         />
@@ -208,24 +217,23 @@ export default function TakeAttendance() {
                             <Header
                                 selectedCourse={selectedCourse}
                                 selectedDate={selectedDate}
-                                onDateChange={setSelectedDate}
+                                onDateChange={handleSelectedDate}
                                 isEdit={isEdit}
                             />
                         ) : null}
 
-                        {!hasAttendance ? (
-                            <AttendanceButton
-                                onSubmitAttendance={submitAttendance}
-                                isSubmitting={isSubmitting}
-                                onEditAttendance={handleEdit}
-                                isEdit={isEdit}
-                                course={selectedCourse}
-                                onAddStudent={handleAddStudent}
-                                onCreateStudent={handleCreateStudent}
-                                onDeactivateCourse={handleDeactivateCourse}
-                                canSubmit={isAttendanceComplete}
-                            />
-                        ) : null}
+                        <AttendanceButton
+                            onSubmitAttendance={submitAttendance}
+                            isSubmitting={isSubmitting}
+                            onEditAttendance={handleEdit}
+                            isEdit={isEdit}
+                            hasAttendance={hasAttendance}
+                            course={selectedCourse}
+                            onAddStudent={handleAddStudent}
+                            onCreateStudent={handleCreateStudent}
+                            onDeactivateCourse={handleDeactivateCourse}
+                            canSubmit={isAttendanceComplete}
+                        />
 
                         <StudentList
                             course={selectedCourse}
@@ -266,6 +274,7 @@ export default function TakeAttendance() {
                     }
 
                     if (confirmType === "SUBMIT") {
+                        setIsLoading(true)
                         if (!curso) return;
 
                         setIsSubmitting(true);
@@ -281,6 +290,7 @@ export default function TakeAttendance() {
 
                         setIsEdit(false);
                         toast.success("La asistencia fue registrada correctamente!")
+                        setIsLoading(false)
                     }
 
                     setConfirmType(null);

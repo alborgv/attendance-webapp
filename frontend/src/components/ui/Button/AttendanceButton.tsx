@@ -16,7 +16,8 @@ const AttendanceButton: React.FC<AttendanceButtonProps> = ({
     onCreateStudent,
     onDeactivateCourse,
     course,
-    canSubmit
+    canSubmit,
+    hasAttendance
 }) => {
     
     const [isStudentSearchModalOpen, setIsStudentSearchModalOpen] = useState(false);
@@ -71,6 +72,7 @@ const AttendanceButton: React.FC<AttendanceButtonProps> = ({
                     label={isEdit ? "Cancelar" : "Tomar asistencia"}
                     color={isEdit ? "red" : "blue"}
                     onClick={onEditAttendance}
+                    disabled={hasAttendance}
                 />
 
                 <IconActionButton

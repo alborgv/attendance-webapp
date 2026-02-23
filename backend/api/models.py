@@ -194,7 +194,7 @@ class Curso(models.Model):
     estudiantes = models.ManyToManyField(User, related_name="curso_estudiantes")
     monitor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='curso_monitor')
     estado = models.CharField(max_length=1, choices=ESTADOS_CURSO, default='A', blank=True)
-    fecha = models.DateField(auto_now_add=True)
+    fecha = models.DateField(default=timezone.now)
     
     
     def __str__(self):
@@ -222,7 +222,7 @@ class Asistencia(models.Model):
         related_name='asistencias'
     )
     estado = models.CharField(max_length=1, choices=ESTADOS_ASISTENCIA, default='P', blank=True)
-    fecha = models.DateField(auto_now_add=True)
+    fecha = models.DateField(default=timezone.now)
     observaciones = models.TextField(blank=True)
     creado = models.DateField(auto_now_add=True)
 
