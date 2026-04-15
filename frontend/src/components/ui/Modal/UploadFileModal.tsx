@@ -104,7 +104,7 @@ export default function UploadFileModal({ isOpen, onClose, onNext }: UploadFileM
 
     return (
         <div onClick={handleClose} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
+            <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-2xl bg-white shadow-xl my-4 max-h-[90vh] overflow-y-auto">
                 <div className="flex items-center justify-between px-6 py-4">
                     <h2 className="text-lg font-semibold">Subir archivo</h2>
                     <button onClick={handleClose} className="cursor-pointer text-gray-400 hover:text-gray-600">

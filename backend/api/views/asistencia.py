@@ -1,4 +1,4 @@
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.utils import timezone
 
 from rest_framework import status, generics
@@ -27,12 +27,9 @@ class CrearAsistenciaView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        print("SERI:", serializer)
         asistencias_creadas = serializer.save()
         
         response_serializer = AsistenciaSerializer(asistencias_creadas, many=True)
-        # print("AC:", asistencias_creadas[0])
-        print("RS:", response_serializer.data)
         return Response({
             "message": f"Se procesaron {len(asistencias_creadas)} asistencias",
             "asistencias": response_serializer.data
@@ -70,14 +67,31 @@ class AsistenciaMetricasView(APIView):
                 fecha__month=today.month
             ).count()
             estudiantes_con_bajas = (
-                Asistencia.objects
-                .filter(estado='A')
-                .values('estudiante')
-                .annotate(total=Count('id'))
-                .filter(total__gt=3)
+                UserProfile.objects
+                .filter(role='estudiante')
+                .annotate(
+                    total_inasistencia=Count(
+                        'asistencias',
+                        filter=Q(
+                            asistencias__estado='A',
+                            asistencias__curso__estado='A'
+                        )
+                    )
+                )
+                .filter(total_inasistencia__gte=3)
                 .count()
             )
             
+            to_au = Asistencia.objects.filter(
+                estado='A',
+                curso__estado='A',
+                fecha=timezone.now()
+            )
+            # print("to_au", to_au)
+            # for i in to_au:
+            #     print("ES:", i.estudiante.primer_nombre)
+            #     print("N:", i.estudiante.numero_identificacion)
+
             metrics_data = {
                 'cursos_activos': cursos_activos,
                 'total_estudiantes_activos': total_estudiantes_activos,
@@ -89,6 +103,7 @@ class AsistenciaMetricasView(APIView):
                 'estudiantes_con_bajas': estudiantes_con_bajas,
                 'last_updated': timezone.now()
             }
+            
             serializer = AsistenciaMetricasSerializer(metrics_data)
             return Response(serializer.data, status=status.HTTP_200_OK)
             

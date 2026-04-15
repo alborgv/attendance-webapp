@@ -57,23 +57,25 @@ const StudentSelectionModal: React.FC<StudentSelectionProps> = ({
 
     return (
         <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-60 p-4">
-            <div 
+            <div
                 className="fixed inset-0 bg-opacity-30 backdrop-blur-sm"
                 onClick={onClose}
             />
             
             <div
                 ref={modalRef}
-                className="relative shadow-2xl rounded-2xl max-w-2xl w-full mx-4 border border-gray-200 bg-white"
+                className="relative shadow-2xl rounded-2xl max-w-2xl w-full mx-4 border border-gray-200 bg-white flex flex-col max-h-[90vh]"
             >
-                <div className="bg-blue-600 text-white p-4 rounded-xl">
+                {/* Header */}
+                <div className="bg-blue-600 text-white p-4 rounded-t-xl shrink-0">
                     <h2 className="text-xl font-semibold">Seleccionar Estudiantes</h2>
                     <p className="text-blue-100 text-sm mt-1">
                         Busca y selecciona múltiples estudiantes
                     </p>
                 </div>
 
-                <div className="p-4 border-b">
+                {/* Search */}
+                <div className="p-4 border-b shrink-0">
                     <input
                         type="text"
                         placeholder="Ingresa número de documento o nombre..."
@@ -87,7 +89,8 @@ const StudentSelectionModal: React.FC<StudentSelectionProps> = ({
                     </div>
                 </div>
 
-                <div className="max-h-96 overflow-y-auto">
+                {/* Scrollable student list */}
+                <div className="overflow-y-auto flex-1">
                     {filteredStudents.length === 0 && searchTerm.trim() !== '' ? (
                         <div className="p-4 text-center text-gray-500">
                             No se encontraron estudiantes
@@ -133,7 +136,8 @@ const StudentSelectionModal: React.FC<StudentSelectionProps> = ({
                     )}
                 </div>
 
-                <div className="p-4 border-t bg-gray-50 flex gap-3">
+                {/* Footer */}
+                <div className="p-4 border-t bg-gray-50 flex gap-3 rounded-b-2xl shrink-0">
                     <button
                         onClick={onClose}
                         className="flex-1 py-2 px-4 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg transition-colors"

@@ -24,7 +24,8 @@ class UserBasicFilter(django_filters.FilterSet):
     )
 
     jornada = django_filters.CharFilter(
-        field_name="jornada"
+        field_name="jornada",
+        method="filter_jornada"
     )
 
     username = django_filters.CharFilter(method="filter_username")
@@ -107,7 +108,8 @@ class AsistenciaFilter(django_filters.FilterSet):
 class EstudianteAusenteRangoFilter(django_filters.FilterSet):
     
     estado = django_filters.CharFilter(
-        field_name="estudiante__estado"
+        field_name="estudiante__estado",
+        method="filter_estado"
     )
     fecha_inicio = django_filters.DateFilter(
         field_name="fecha", lookup_expr="gte"
@@ -123,6 +125,11 @@ class EstudianteAusenteRangoFilter(django_filters.FilterSet):
     )
     
     username = django_filters.CharFilter(method="filter_username")
+
+    def filter_estado(self, queryset, name, value):
+        if value == "I":
+            return queryset.filter(Q(estudiante__estado="I") | Q(estudiante__estado="C") | Q(estudiante__estado="G"))
+        return queryset.filter(**{name: value})
 
     def filter_username(self, queryset, name, value):
         

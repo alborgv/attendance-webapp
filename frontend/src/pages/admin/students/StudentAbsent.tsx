@@ -1,5 +1,5 @@
 import { StudentAbsentFilter } from '@/components/filters';
-import Layout from '@/components/Layout';
+import AdminLayout from '@/components/AdminLayout';
 import { StudentAbsentProps } from '@/components/Students';
 import StudentAbsentTable from '@/components/Students/tables/StudentAbsentTable';
 import ExportExcelButton from '@/components/ui/Button/ExportExcelButton';
@@ -77,7 +77,7 @@ export default function StudentAbsent() {
     };
 
     return (
-        <Layout>
+        <AdminLayout>
             <div className="mb-8 p-4 md:p-6">
                 <VolverPanel />
 
@@ -107,6 +107,6 @@ export default function StudentAbsent() {
                     onPageChange={handlePageChange}
                 />
             </div>
-        </Layout>
+        </AdminLayout>
     );
 }

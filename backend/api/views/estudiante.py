@@ -1,4 +1,3 @@
-from urllib import request
 from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db import models
@@ -74,18 +73,17 @@ class EstudiantesRiesgoView(ListAPIView):
     def get_queryset(self):
         return (
             UserProfile.objects
-            .filter(
-                role='estudiante',
-                asistencias__estado='A',
-                asistencias__curso__estado='A'
-            )
+            .filter(role='estudiante')
             .annotate(
                 total_inasistencia=Count(
                     'asistencias',
-                    filter=Q(asistencias__estado='A')
+                    filter=Q(
+                        asistencias__estado='A',
+                        asistencias__curso__estado='A'
+                    )
                 )
             )
-            .filter(total_inasistencia__gt=3)
+            .filter(total_inasistencia__gte=3)
             .distinct()
         )
 
@@ -120,7 +118,7 @@ class EstudianteAusenteRangoView(ListAPIView):
                 "estudiante__segundo_apellido",
                 "estudiante__primer_nombre",
                 "estudiante__segundo_nombre",
-                "curso__modulo"
+                "curso__modulo",
             )
         )
 

@@ -63,74 +63,58 @@ export const createStudentsService = (http: {
     },
 
 
-        async StudentAlert(params?: {
-            status?: string;
-            jornada?: string;
-            username?: string;
-            page?: number;
-            pageSize?: number;
-        }): Promise<PaginatedResponse<Student>> {
-            const queryParams = new URLSearchParams();
+    async StudentAlert(params?: {
+        status?: string;
+        jornada?: string;
+        username?: string;
+        page?: number;
+        pageSize?: number;
+    }): Promise<PaginatedResponse<Student>> {
+        const queryParams = new URLSearchParams();
 
-            if (params?.username && params.username.trim() !== "") {
-                queryParams.append("username", params.username);
-            }
-
-
-            queryParams.append("estado", String(params?.status ?? ""));
-            queryParams.append("jornada", String(params?.jornada ?? ""));
-            queryParams.append("page", String(params?.page ?? 1));
-            queryParams.append("page_size", String(params?.pageSize ?? 8));
-
-            const response = await http.request(
-                `/api/asistencia/ausencias/?${queryParams.toString()}`
-            );
-
-            return await response.json();
-        },
-
-        // async StudentAbsent() {
-        //     const response = await http.request("/api/asistencia/ausencias/");
-        //     const data = await response.json();
-        //     return data;
-        // }
-    //     params ?: {
-    //     username?: string;
-    //     page?: number;
-    //     pageSize?: number;
-    //     status?: string;
-    //     jornada?: string;
-    // }): Promise<PaginatedResponse< Student >> {
-
-        async StudentAbsent(params?: {
-            startDate?: string;
-            endDate?: string;
-            status?: string;
-            jornada?: string;
-            username?: string;
-            page?: number;
-            pageSize?: number;
-        }): Promise<PaginatedResponse< Student >> {
-
-            const queryParams = new URLSearchParams();
-
-            if (params?.username && params.username.trim() !== "") {
-                queryParams.append("username", params.username);
-            }
-
-
-            queryParams.append("estado", String(params?.status ?? ""));
-            queryParams.append("fecha_inicio", String(params?.startDate ?? ""));
-            queryParams.append("fecha_fin", String(params?.endDate ?? ""));
-            queryParams.append("jornada", String(params?.jornada ?? ""));
-            queryParams.append("page", String(params?.page ?? 1));
-            queryParams.append("page_size", String(params?.pageSize ?? 8));
-
-            const response = await http.request(
-                `/api/asistencia/ausencias/?${queryParams.toString()}`
-            );
-
-            return await response.json();
+        if (params?.username && params.username.trim() !== "") {
+            queryParams.append("username", params.username);
         }
+
+        queryParams.append("estado", String(params?.status ?? ""));
+        queryParams.append("jornada", String(params?.jornada ?? ""));
+        queryParams.append("page", String(params?.page ?? 1));
+        queryParams.append("page_size", String(params?.pageSize ?? 8));
+
+        const response = await http.request(
+            `/api/users/riesgo_de_baja/?${queryParams.toString()}`
+        );
+
+        return await response.json();
+    },
+
+    async StudentAbsent(params?: {
+        startDate?: string;
+        endDate?: string;
+        status?: string;
+        jornada?: string;
+        username?: string;
+        page?: number;
+        pageSize?: number;
+    }): Promise<PaginatedResponse<Student>> {
+        const queryParams = new URLSearchParams();
+
+        if (params?.username && params.username.trim() !== "") {
+            queryParams.append("username", params.username);
+        }
+
+        queryParams.append("estado", String(params?.status ?? ""));
+        queryParams.append("fecha_inicio", String(params?.startDate ?? ""));
+        queryParams.append("fecha_fin", String(params?.endDate ?? ""));
+        queryParams.append("jornada", String(params?.jornada ?? ""));
+        queryParams.append("page", String(params?.page ?? 1));
+        queryParams.append("page_size", String(params?.pageSize ?? 8));
+
+        const response = await http.request(
+            `/api/asistencia/ausencias/?${queryParams.toString()}`
+        );
+
+        return await response.json();
+    }
 
 });

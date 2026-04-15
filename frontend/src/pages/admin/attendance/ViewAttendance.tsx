@@ -1,15 +1,14 @@
 import AttendanceMetrics from '@/components/Attendance/metrics/AttendanceMetrics';
-import Layout from '@/components/Layout';
+import AdminLayout from '@/components/AdminLayout';
 import AttendanceTable from '@/components/Attendance/tables/AttendanceTable';
 
 export default function ViewAttendance() {
     return (
-        <Layout>
-            
-                <div className="max-w-full mx-auto">
-                    <AttendanceMetrics />
-                    <AttendanceTable />
-                </div>
-        </Layout>
+        <AdminLayout>
+            <div className="max-w-full mx-auto">
+                <AttendanceMetrics />
+                <AttendanceTable />
+            </div>
+        </AdminLayout>
     );
-}
+}

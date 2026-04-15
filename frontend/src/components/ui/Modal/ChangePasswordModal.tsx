@@ -48,7 +48,7 @@ const ChangePasswordModal = ({
             />
 
             <div
-                className="relative bg-white rounded-xl shadow-xl w-full max-w-sm p-6"
+                className="relative bg-white rounded-xl shadow-xl w-full max-w-sm p-6 my-4 max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <h3 className="text-lg font-semibold mb-4">{title}</h3>

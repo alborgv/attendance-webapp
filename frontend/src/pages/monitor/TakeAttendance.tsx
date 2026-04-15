@@ -63,7 +63,6 @@ export default function TakeAttendance() {
                 return acc;
             }, {} as Record<string, AttendanceState>);
 
-            console.log("ATT MAP:", attendanceMap)
             setAttendanceByDate(prev => ({
                 ...prev,
                 [dateKey]: attendanceMap
@@ -97,14 +96,13 @@ export default function TakeAttendance() {
         const loadCourse = async () => {
             const course = await getCourses({ curso_id: curso }).then(courses => courses[0]);
             setSelectedCourse(course);
+            setIsLoading(false);
         };
 
         loadCourse();
-        setIsLoading(false);
     }, [curso]);
 
     const setAttendance = (documentId: string, state: AttendanceState) => {
-        console.log("ATT:", documentId, state)
         setAttendanceByDate(prev => ({
             ...prev,
             [dateKey]: {
@@ -173,11 +171,9 @@ export default function TakeAttendance() {
         return <TakeAttendanceSkeleton />;
     }
 
-    const handleSelectedDate = async (date: Date) => {
-        setIsLoading(true);
-        setSelectedDate(date)
-        setIsLoading(false);
-    }
+    const handleSelectedDate = (date: Date) => {
+        setSelectedDate(date);
+    };
 
     return (
         <Layout>

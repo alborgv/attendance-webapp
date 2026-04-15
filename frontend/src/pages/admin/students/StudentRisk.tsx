@@ -1,5 +1,5 @@
 import { StudentAlertFilter } from '@/components/filters';
-import Layout from '@/components/Layout';
+import AdminLayout from '@/components/AdminLayout';
 import { StudentAlertProps } from '@/components/Students';
 import StudentAlertTable from '@/components/Students/tables/StudentAlertTable';
 import ExportExcelButton from '@/components/ui/Button/ExportExcelButton';
@@ -78,7 +78,7 @@ export default function StudentRisk() {
 
 
     return (
-        <Layout>
+        <AdminLayout>
             <div className="mb-8 p-4 md:p-6">
                 <VolverPanel />
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -103,6 +103,6 @@ export default function StudentRisk() {
                     onPageChange={handlePageChange}
                 />
             </div>
-        </Layout>
+        </AdminLayout>
     );
 }

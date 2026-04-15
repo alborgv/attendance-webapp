@@ -1,31 +1,22 @@
 import { useQuery } from '@/context/QueryContext';
 import { AttendanceMetricsData } from '@/types/props/attendance';
 import React, { useState, useEffect } from 'react';
-import { FaSync, FaChartLine,
-    FaCalendarAlt } from 'react-icons/fa';
+import { FaSync, FaChartLine, FaCalendarAlt } from 'react-icons/fa';
 import MetricsAlertCard from '../../ui/Card/MetricsAlertCard';
 import AttendanceMetricsLoading from './AttendanceMetricsLoading';
 import AttendanceMetricsError from './AttendanceMetricsError';
 import MetricsCard from '../../ui/Card/MetricsCard';
-import { LuActivity, LuBookText, LuCalendarX, LuLayoutList, LuShieldAlert, LuUsers } from 'react-icons/lu';
+import { LuActivity, LuBookText, LuCalendarX, LuShieldAlert, LuUsers } from 'react-icons/lu';
 import { FiAlertTriangle } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
-import { RiFileExcel2Line } from 'react-icons/ri';
 import { formatDateTime } from '@/utils/date.utils';
-import UploadFileModal from '@/components/ui/Modal/UploadFileModal';
-import { useToast } from '@/hooks/useToast';
 
 const AttendanceMetrics: React.FC = () => {
-    const { getAttendanceMetrics, uploadExcel } = useQuery();
-    const toast = useToast();
-
-    const navigate = useNavigate();
+    const { getAttendanceMetrics } = useQuery();
 
     const [metrics, setMetrics] = useState<AttendanceMetricsData | null>(null);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [openUploadFile, setOpenUploadFile] = useState<boolean>(false);
 
     const fetchMetrics = async () => {
         setRefreshing(true);
@@ -52,18 +43,6 @@ const AttendanceMetrics: React.FC = () => {
     const formatNumber = (num: number) => {
         return new Intl.NumberFormat('es-ES').format(num);
     };
-
-    const handleMonitor = () => {
-        navigate("/monitores/")
-    }
-
-    const handleUploadExcel = async (file: File | null) => {
-        if (!file) return;
-        await uploadExcel(file)
-        await fetchMetrics();
-        toast.success("La información de los estudiantes se guardó con éxito.")
-        setOpenUploadFile(false)
-    }
 
     if (loading && !metrics) {
         return <AttendanceMetricsLoading />;
@@ -101,28 +80,6 @@ const AttendanceMetrics: React.FC = () => {
                             {metrics ? formatNumber(metrics.total_estudiantes_activos) : 0} estudiantes activos
                         </span>
                     </div>
-                    <button
-                            onClick={() => setOpenUploadFile(true)}
-                            // disabled={refreshing}
-                            className="flex items-center gap-3 px-4 py-3 bg-linear-to-r from-green-500
-                            to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700
-                            transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50
-                            disabled:cursor-not-allowed cursor-pointer"
-                        >
-                            <RiFileExcel2Line size={20} />
-                            <span className="font-semibold">Importar</span>
-                    </button>
-                    <button
-                        onClick={handleMonitor}
-                        className="flex items-center gap-3 px-4 py-3 bg-linear-to-r from-blue-500
-                        to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700
-                        transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50
-                        disabled:cursor-not-allowed cursor-pointer"
-                    >
-                        <LuLayoutList size={20} />
-                        <span className="font-semibold">Monitores</span>
-                    </button>
-                    
                     <button
                         onClick={fetchMetrics}
                         disabled={refreshing}
@@ -179,13 +136,6 @@ const AttendanceMetrics: React.FC = () => {
             {metrics && (
                 <MetricsAlertCard total={metrics.total_ausentes} />
             )}
-            <UploadFileModal
-                isOpen={openUploadFile}
-                onClose={() => setOpenUploadFile(false)}
-                onNext={handleUploadExcel}
-            />
-
-
         </div>
     );
 };

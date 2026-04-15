@@ -48,6 +48,10 @@ def export_to_excel(
     """
 
     df = pd.DataFrame(data)
+
+    if df.empty:
+        df = pd.DataFrame(columns=[c["key"] for c in columns])
+
     ordered_columns = [c["key"] for c in columns]
     df = df[ordered_columns]
     df.columns = [c["label"].upper() for c in columns]

@@ -84,14 +84,6 @@ class UploadExcelView(APIView):
 
         received_headers = list(df.columns)
         if received_headers != EXPECTED_HEADERS:
-            a = Response(
-                {
-                    "detail": "Formato no soportado: las columnas no coinciden exactamente",
-                    "expected": EXPECTED_HEADERS,
-                    "received": received_headers
-                },
-                status=status.HTTP_400_BAD_REQUEST)
-            
             return Response(
                 {
                     "detail": "Formato no soportado: las columnas no coinciden exactamente",
@@ -183,7 +175,6 @@ class UploadExcelView(APIView):
 
                         profile.save()
                         updated += 1
-                        print(f"ESTUDIANTE ACTUALIZADO: ({updated}) {numero_id}")
 
                     else:
                         user = User.objects.create_user(
@@ -193,8 +184,6 @@ class UploadExcelView(APIView):
                             last_name=row["Primer apellido"],
                             email=row["Correo electrónico"],
                         )
-                        print("USER:", user)
-
                         UserProfile.objects.create(
                             user=user,
                             role="estudiante",
@@ -202,7 +191,6 @@ class UploadExcelView(APIView):
                         )
 
                         created += 1
-                        print(f"ESTUDIANTE CREADO: ({created}) {numero_id}")
 
             except Exception as e:
                 skipped += 1
@@ -211,7 +199,6 @@ class UploadExcelView(APIView):
                     "numero_identificacion": numero_id if 'numero_id' in locals() else None,
                     "error": str(e)
                 })
-                print(f"ESTUDIANTE ERROR: {numero_id} || {errors}")
                 
                 continue
 

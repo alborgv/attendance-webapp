@@ -29,8 +29,23 @@ export const createHttpClient = ({
         }
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || "Error desconocido");
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch {
+                throw new Error("Error de conexión");
+            }
+
+            let errorMessage = errorData.detail;
+            
+            if (!errorMessage && errorData && typeof errorData === 'object') {
+                const messages = Object.values(errorData).flat();
+                if (messages.length > 0 && typeof messages[0] === 'string') {
+                    errorMessage = messages[0];
+                }
+            }
+            
+            throw new Error(errorMessage || "Error desconocido");
         }
         return response;
     };

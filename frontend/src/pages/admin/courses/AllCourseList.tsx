@@ -1,4 +1,4 @@
-import Layout from '@/components/Layout';
+import AdminLayout from '@/components/AdminLayout';
 import CourseListTable from '@/components/courses/tables/CourseListTable';
 import { CourseFilters } from '@/components/filters';
 import ExportExcelButton from '@/components/ui/Button/ExportExcelButton';
@@ -74,7 +74,7 @@ export default function AllCourseList() {
     };
 
     return (
-        <Layout>
+        <AdminLayout>
             <div className="mb-8 p-4 md:p-6">
                 <VolverPanel />
 
@@ -104,6 +104,6 @@ export default function AllCourseList() {
                     onPageChange={handlePageChange}
                 />
             </div>
-        </Layout>
+        </AdminLayout>
     );
 }

@@ -10,9 +10,9 @@ const ConfirmModal = ({
     onConfirm,
     onCancel,
 }: ConfirmModalProps) => {
-    if (!open) return null;
-
     const [loading, setLoading] = useState<boolean>(false);
+
+    if (!open) return null;
 
     const handleConfirm = async () => {
         try {
@@ -25,7 +25,7 @@ const ConfirmModal = ({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6 my-4 max-h-[90vh] overflow-y-auto">
                 <h3 className="text-lg font-semibold mb-3">{title}</h3>
                 <p className="text-gray-600 mb-6">{message}</p>
 

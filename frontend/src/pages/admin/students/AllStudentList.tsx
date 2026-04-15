@@ -1,4 +1,4 @@
-import Layout from '@/components/Layout';
+import AdminLayout from '@/components/AdminLayout';
 import { Student, StudentFilters } from '@/components/Students';
 import StudentListTable from '@/components/Students/tables/StudentListTable';
 import { VolverPanel } from '@/components/ui/VolverPanel';
@@ -50,7 +50,7 @@ export default function AllStudentList() {
     }
 
     return (
-        <Layout>
+        <AdminLayout>
             <div className="mb-8 p-4 md:p-6">
                 <VolverPanel />
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -71,6 +71,6 @@ export default function AllStudentList() {
                     onPageChange={handlePageChange}
                 />
             </div>
-        </Layout>
+        </AdminLayout>
     );
 }

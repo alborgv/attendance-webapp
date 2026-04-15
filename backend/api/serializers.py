@@ -139,35 +139,40 @@ class CrearEstudianteExtraSerializer(serializers.ModelSerializer):
         fields = ['primer_nombre', 'numero_identificacion', 'tipo_identificacion', 'celular']
 
     def validate_numero_identificacion(self, value):
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("Ya existe un usuario con este número de identificación")
-        if UserProfile.objects.filter(numero_identificacion=value).exists():
-            raise serializers.ValidationError("Ya existe un perfil con este número de identificación")
+        if UserProfile.objects.filter(numero_identificacion=value, role='estudiante').exists():
+            raise serializers.ValidationError(f"Ya existe un estudiante con el número de identificación {value}")
         return value
 
     def create(self, validated_data):
-        primer_nombre = validated_data.pop('primer_nombre')
-        numero_identificacion = validated_data.pop('numero_identificacion')
-        tipo_identificacion = validated_data.pop('tipo_identificacion')
-        celular = validated_data.pop('celular', '')
+        with transaction.atomic():
+            primer_nombre = validated_data.pop('primer_nombre')
+            numero_identificacion = validated_data.pop('numero_identificacion')
+            tipo_identificacion = validated_data.pop('tipo_identificacion')
+            celular = validated_data.pop('celular', '')
 
-        user = User.objects.create_user(
-            username=numero_identificacion,
-            first_name=primer_nombre,
-            password=numero_identificacion
-        )
+            username = numero_identificacion
+            if User.objects.filter(username=username).exists():
+                username = f"{numero_identificacion}_estudiante"
+                if User.objects.filter(username=username).exists():
+                    username = f"{numero_identificacion}_est_2"
 
-        user_profile = UserProfile.objects.create(
-            user=user,
-            primer_nombre=primer_nombre,
-            numero_identificacion=numero_identificacion,
-            tipo_identificacion=tipo_identificacion,
-            celular=celular,
-            role='estudiante',
-            estado='A'
-        )
+            user = User.objects.create_user(
+                username=username,
+                first_name=primer_nombre,
+                password=numero_identificacion
+            )
 
-        return user_profile
+            profile = UserProfile.objects.create(
+                user=user,
+                primer_nombre=primer_nombre,
+                numero_identificacion=numero_identificacion,
+                tipo_identificacion=tipo_identificacion,
+                celular=celular,
+                role='estudiante',
+                estado='A'
+            )
+
+            return profile
 
     def to_representation(self, instance):
         return {
@@ -251,22 +256,19 @@ class AsistenciaSerializer(serializers.ModelSerializer):
         
         
     def get_estudiante(self, obj):
-        user = UserProfile.objects.get(id=obj.estudiante.id)
-        
-        data = {
-            "id": obj.estudiante.id,
-            "nombre_completo": f"{user.primer_nombre} {user.segundo_nombre} {user.primer_apellido} {user.segundo_apellido}",
-            "tipo_identificacion": user.tipo_identificacion,
-            "numero_identificacion": user.numero_identificacion,
-            "numero": user.celular,
+        estudiante = obj.estudiante
+        return {
+            "id": estudiante.id,
+            "nombre_completo": estudiante.nombre_completo,
+            "tipo_identificacion": estudiante.tipo_identificacion,
+            "numero_identificacion": estudiante.numero_identificacion,
+            "numero": estudiante.celular,
         }
-            
-        return data
     
 
 class AsistenciaBulkSerializer(serializers.Serializer):
     curso = serializers.PrimaryKeyRelatedField(queryset=Curso.objects.all())
-    fecha = serializers.DateField(default=timezone.now())
+    fecha = serializers.DateField(default=timezone.localdate)
     asistencias = serializers.DictField(
         child=serializers.ChoiceField(choices=Asistencia.ESTADOS_ASISTENCIA)
     )
@@ -334,7 +336,7 @@ class MonitorSerializer(serializers.ModelSerializer):
         ]
         
 class ChangeMonitorRoleSerializer(serializers.Serializer):
-    pass
+    role = serializers.ChoiceField(choices=UserProfile.ROLE_CHOICES)
 
 class EstudianteRiesgoSerializer(serializers.ModelSerializer):
     nombre_completo = serializers.SerializerMethodField()
@@ -383,18 +385,6 @@ class EstudianteAusenteSerializer(serializers.ModelSerializer):
             "total_inasistencia",
         ]
 
-# class EstudianteAusenteSerializer(serializers.Serializer):
-#     id = serializers.CharField()
-#     nombre_completo = serializers.CharField()
-#     tipo_documento = serializers.CharField()
-#     numero_documento = serializers.CharField()
-#     modulo = serializers.CharField()
-#     jornada = serializers.CharField()
-#     celular = serializers.CharField()
-#     fecha = serializers.DateField()
-#     estado = serializers.CharField()
-#     total_inasistencia = serializers.IntegerField()
-
     
 class ChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(
@@ -419,10 +409,8 @@ class CrearMonitorSerializer(serializers.ModelSerializer):
         fields = ['primer_nombre', 'numero_identificacion', 'tipo_identificacion', 'celular']
 
     def validate_numero_identificacion(self, value):
-        if User.objects.filter(username=value).exists():
-            raise serializers.ValidationError("Ya existe un usuario con este número de identificación")
-        if UserProfile.objects.filter(numero_identificacion=value).exists():
-            raise serializers.ValidationError("Ya existe un perfil con este número de identificación")
+        if UserProfile.objects.filter(numero_identificacion=value, role='monitor').exists():
+            raise serializers.ValidationError(f"Ya existe un monitor con el número de identificación {value}")
         return value
 
     def create(self, validated_data):
@@ -432,13 +420,19 @@ class CrearMonitorSerializer(serializers.ModelSerializer):
             tipo_identificacion = validated_data.pop('tipo_identificacion')
             celular = validated_data.pop('celular', '')
 
+            username = numero_identificacion
+            if User.objects.filter(username=username).exists():
+                username = f"{numero_identificacion}_monitor"
+                if User.objects.filter(username=username).exists():
+                    username = f"{numero_identificacion}_mon_2"
+
             user = User.objects.create_user(
-                username=numero_identificacion,
+                username=username,
                 first_name=primer_nombre,
                 password=numero_identificacion
             )
 
-            user_profile = UserProfile.objects.create(
+            profile = UserProfile.objects.create(
                 user=user,
                 primer_nombre=primer_nombre,
                 numero_identificacion=numero_identificacion,
@@ -447,4 +441,5 @@ class CrearMonitorSerializer(serializers.ModelSerializer):
                 role='monitor',
                 estado='A'
             )
-            return user_profile
+
+            return profile
